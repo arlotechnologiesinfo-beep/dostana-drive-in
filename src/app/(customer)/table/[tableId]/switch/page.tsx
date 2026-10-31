@@ -9,7 +9,7 @@ export default function TableSwitchPage() {
   const tableId = String(useParams().tableId).padStart(2, "0")
   return (
     <SubPage tableId={tableId} title="Table Switch" nav={false} backHref={`/table/${tableId}/more`}>
-      <section aria-label="Current table" className="flex items-center gap-4 rounded-[24px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+      <section aria-label="Current table" className="flex items-center gap-4 rounded-[24px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FFE7D6]">
           <MapPin className="h-6 w-6 text-[#E85D16]" aria-hidden="true" />
         </span>

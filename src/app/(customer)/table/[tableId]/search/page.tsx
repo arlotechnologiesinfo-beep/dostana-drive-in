@@ -52,7 +52,7 @@ function SearchContent() {
 
   return (
     <SubPage tableId={tableId} title="Search">
-      <div className="flex h-[56px] items-center gap-2 rounded-full bg-white pl-4 pr-1.5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+      <div className="flex h-[56px] items-center gap-2 rounded-full bg-white pl-4 pr-2 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
         <Search className="h-5 w-5 shrink-0 text-[#26160F]" aria-hidden="true" />
         <input
           type="search"
@@ -125,7 +125,7 @@ function SearchContent() {
         {showStalls && stalls.length > 0 && (
           <section aria-label="Stalls">
             <h2 className="mb-2 text-sm font-semibold text-[#26160F]">Stalls</h2>
-            <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
+            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
               {stalls.map((s) => (
                 <li key={s.id}>
                   <StallRow stall={s} tableId={tableId} />
@@ -138,7 +138,7 @@ function SearchContent() {
         {showDishes && dishes.length > 0 && (
           <section aria-label="Dishes">
             <h2 className="mb-2 text-sm font-semibold text-[#26160F]">{q ? "Dishes" : "Popular dishes"}</h2>
-            <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
+            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
               {dishes.slice(0, MAX_DISHES).map((d) => (
                 <li key={d.id}>
                   <DishRow item={d} tableId={tableId} quantity={cart.quantityFor(d.id)} onAdd={cart.add} onQuantity={cart.setQty} />
@@ -149,7 +149,7 @@ function SearchContent() {
         )}
 
         {nothing && (
-          <div className="flex flex-col items-center gap-2 rounded-[22px] bg-white px-6 py-10 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+          <div className="flex flex-col items-center gap-2 rounded-[22px] bg-white px-6 py-10 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFE7D6]">
               <Search className="h-5 w-5 text-[#E85D16]" aria-hidden="true" />
             </span>

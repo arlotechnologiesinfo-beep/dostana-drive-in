@@ -11,13 +11,17 @@ import { CategoryRow } from "@/components/home/CategoryRow"
 import { FilterSheet } from "@/components/home/FilterSheet"
 import { HeroCarousel } from "@/components/home/HeroCarousel"
 import { HomeHeader } from "@/components/home/HomeHeader"
+import { MegaTreatsBanner } from "@/components/home/MegaTreatsBanner"
 import { PopularStalls } from "@/components/home/PopularStalls"
 import { PromoCards } from "@/components/home/PromoCards"
 import { RecommendedDishes } from "@/components/home/RecommendedDishes"
+import { JoinGoldBanner } from "@/components/home/JoinGoldBanner"
+import { MadeWithLove } from "@/components/home/MadeWithLove"
+import { StallCircles } from "@/components/home/StallCircles"
 import { SearchBar } from "@/components/home/SearchBar"
 import { SearchResults } from "@/components/home/SearchResults"
 import { SectionHeader } from "@/components/home/SectionHeader"
-import { HERO_SLIDES, HOME_CATEGORIES, HOME_DISHES, HOME_STALLS, type HomeDish } from "@/data/home-demo"
+import { HOME_CATEGORIES, HOME_DISHES, HOME_STALLS, type HomeDish } from "@/data/home-demo"
 import { activeFilterCount, filterDishes, filterStalls, searchHome } from "@/lib/home-filters"
 import { type AddableDish } from "@/lib/catalog"
 import { useCatalog } from "@/lib/use-catalog"
@@ -78,7 +82,7 @@ export default function TablePage() {
       const c = catalog.find((x) => x.id === d.id)
       return c ? [{ ...d, name: c.name, price: c.price }] : []
     })
-    return filterDishes(live, filters, category)
+    return filterDishes(live, filters, category).sort((x, y) => y.rating - x.rating)
   }, [filters, category, catalog])
   const searching = query.trim().length > 0
   const results = useMemo(() => searchHome(query, HOME_STALLS, catalog, HOME_CATEGORIES), [query, catalog])
@@ -114,7 +118,7 @@ export default function TablePage() {
   if (!tableValid) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FFF9F2] p-6">
-        <div className="w-full max-w-sm rounded-[24px] bg-white p-8 text-center shadow-[0_12px_32px_rgba(48,32,25,0.1)]">
+        <div className="w-full max-w-sm rounded-[24px] bg-white p-8 text-center shadow-[0_12px_32px_rgba(48,32,25,0.08)]">
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FCE8E7]">
             <AlertTriangle className="h-7 w-7 text-[#EF493B]" aria-hidden="true" />
           </span>
@@ -169,8 +173,9 @@ export default function TablePage() {
               />
             ) : (
               <>
-                <HeroCarousel slides={HERO_SLIDES} tableId={tableId} />
+                <HeroCarousel tableId={tableId} />
                 <CategoryRow categories={HOME_CATEGORIES} selectedId={categoryId} onSelect={setCategoryId} />
+                <StallCircles stalls={HOME_STALLS} tableId={tableId} />
                 <PromoCards tableId={tableId} />
 
                 <section aria-labelledby="popular-stalls" className="space-y-1">
@@ -179,6 +184,8 @@ export default function TablePage() {
                   </div>
                   <PopularStalls stalls={stalls} tableId={tableId} />
                 </section>
+
+                <MegaTreatsBanner tableId={tableId} />
 
                 <section aria-labelledby="recommended" className="space-y-1">
                   <div id="recommended">
@@ -193,12 +200,8 @@ export default function TablePage() {
                   />
                 </section>
 
-                <p className="px-5 text-center text-xs leading-4 text-[#A39B95] md:px-8">
-                  Demo menu: stalls, prices, ratings and photos are samples.{" "}
-                  <Link href={`/table/${tableId}/more`} className="underline">
-                    More
-                  </Link>
-                </p>
+                <JoinGoldBanner tableId={tableId} />
+                <MadeWithLove />
               </>
             )}
           </div>
@@ -215,7 +218,7 @@ export default function TablePage() {
               transition={{ duration: 0.2 }}
               className="pointer-events-none fixed inset-x-0 bottom-[112px] z-50 flex justify-center px-4"
             >
-              <span className="flex max-w-[360px] items-center gap-2 rounded-full bg-[#26160F] px-4 py-2.5 text-sm font-medium text-white shadow-[0_8px_24px_rgba(38,22,15,0.3)]">
+              <span className="flex max-w-[360px] items-center gap-2 rounded-full bg-[#26160F] px-4 py-3 text-sm font-medium text-white shadow-[0_8px_24px_rgba(38,22,15,0.08)]">
                 <Check className="h-4 w-4 shrink-0 text-[#63B65B]" aria-hidden="true" />
                 <span className="truncate">{toast.text}</span>
               </span>

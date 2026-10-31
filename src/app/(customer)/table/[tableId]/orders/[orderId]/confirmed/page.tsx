@@ -22,7 +22,7 @@ export default function OrderConfirmedPage() {
           <span className="absolute inset-0 rounded-full bg-[#EAF6E5]" aria-hidden="true" />
           <Leaf className="absolute -left-2 top-4 h-8 w-8 -rotate-45 text-[#63B65B]" aria-hidden="true" />
           <Leaf className="absolute -right-2 bottom-6 h-8 w-8 rotate-12 text-[#63B65B]" aria-hidden="true" />
-          <span className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#63B65B] text-white shadow-[0_12px_28px_rgba(99,182,91,0.4)]">
+          <span className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#63B65B] text-white shadow-[0_12px_28px_rgba(99,182,91,0.08)]">
             <Check className="h-12 w-12" strokeWidth={3} aria-hidden="true" />
           </span>
         </div>
@@ -32,7 +32,7 @@ export default function OrderConfirmedPage() {
           Your delicious food is being prepared. Enjoy your meal!
         </p>
 
-        <dl className="mt-6 grid grid-cols-2 gap-3 rounded-[22px] bg-white p-5 text-left shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <dl className="mt-6 grid grid-cols-2 gap-3 rounded-[22px] bg-white p-5 text-left border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <div>
             <dt className="text-xs text-[#77716D]">Order ID</dt>
             <dd className="mt-0.5 text-[15px] font-bold text-[#26160F]">{ready && order ? `#${order.id.replace("DOSTANA-", "")}` : "…"}</dd>

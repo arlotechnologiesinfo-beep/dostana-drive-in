@@ -72,7 +72,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-md"
+          className="fixed inset-0 bg-[#26160F]/40"
         />
 
         {/* Modal Container */}
@@ -85,7 +85,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary glow-red">
+              <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
                 <Bell className="w-5 h-5" />
               </div>
               <div>
@@ -139,7 +139,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
                       onClick={() => { setSelectedType(req.id); setCooldownSeconds(null) }}
                       className={`p-3.5 rounded-2xl border text-left transition-all ${
                         isSelected
-                          ? "bg-primary/15 border-primary text-primary glow-maroon"
+                          ? "bg-primary/15 border-primary text-primary"
                           : "bg-surface border-border text-muted-foreground hover:border-primary/20 hover:text-foreground"
                       }`}
                     >
@@ -159,7 +159,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
                 disabled={!selectedType || isSubmitting}
                 className={`w-full h-12 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
                   selectedType && !isSubmitting
-                    ? "bg-primary glow-maroon text-white hover:bg-primary-dark rave-glow"
+                    ? "bg-primary text-white hover:bg-primary-dark"
                     : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
                 style={{ fontFamily: "var(--font-heading)" }}

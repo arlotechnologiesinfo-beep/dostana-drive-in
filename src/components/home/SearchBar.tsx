@@ -11,7 +11,7 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChange, onOpenFilters, activeFilters }: SearchBarProps) {
   return (
-    <div className="flex h-[62px] items-center gap-2 rounded-full bg-white pl-4 pr-1.5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+    <div className="flex h-[62px] items-center gap-2 rounded-full bg-white pl-4 pr-2 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
       <Search className="h-5 w-5 shrink-0 text-[#26160F]" aria-hidden="true" />
       <input
         id="home-search"

@@ -23,7 +23,7 @@ export default function NotificationsPage() {
         {DEMO_NOTIFICATIONS.map((n) => {
           const unread = mounted && !readIds.includes(n.id)
           return (
-            <li key={n.id} className="flex gap-3 rounded-[20px] bg-white p-4 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+            <li key={n.id} className="flex gap-3 rounded-[20px] bg-white p-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFE7D6] text-[#E85D16]">
                 <Bell className="h-5 w-5" aria-hidden="true" />
               </span>

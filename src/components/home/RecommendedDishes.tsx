@@ -18,7 +18,7 @@ export function DishCard({ dish, quantity, onAdd, onQuantity, available = true }
   const toggleDish = useFavoritesStore((s) => s.toggleDish)
 
   return (
-    <article className="relative w-[164px] shrink-0 snap-start rounded-[20px] md:w-full bg-white p-2.5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+    <article className="relative w-[164px] shrink-0 snap-start rounded-[20px] md:w-full bg-white p-3 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
       <div className="relative h-[116px] w-full overflow-hidden rounded-2xl md:h-[170px] bg-[#FFF1E5]">
         <Image src={dish.image} alt={dish.name} fill sizes="164px" className="object-cover" />
       </div>
@@ -37,17 +37,17 @@ export function DishCard({ dish, quantity, onAdd, onQuantity, available = true }
         </span>
       </button>
 
-      <div className="mt-2.5 px-0.5">
+      <div className="mt-3 px-0.5">
         <h3 className="truncate text-sm font-semibold leading-5 text-[#26160F]">{dish.name}</h3>
         <p className="truncate text-xs leading-4 text-[#77716D]">{dish.stallName}</p>
         <p className="mt-1 flex items-center gap-1 text-xs font-medium leading-4 text-[#145A25]">
           <Star className="h-3.5 w-3.5 fill-[#63B65B] text-[#63B65B]" aria-hidden="true" />
           {dish.rating.toFixed(1)}
         </p>
-        <div className="mt-1.5 flex min-h-11 items-center justify-between">
+        <div className="mt-2 flex min-h-11 items-center justify-between">
           <span className="text-base font-bold text-[#26160F]">₹{dish.price}</span>
           {!available ? (
-            <span className="rounded-full bg-[#FCE8E7] px-2.5 py-1 text-xs font-semibold text-[#EF493B]">Sold out</span>
+            <span className="rounded-full bg-[#FCE8E7] px-3 py-1 text-xs font-semibold text-[#EF493B]">Sold out</span>
           ) : quantity === 0 ? (
             <button
               type="button"
@@ -55,12 +55,12 @@ export function DishCard({ dish, quantity, onAdd, onQuantity, available = true }
               aria-label={`Add ${dish.name} to cart`}
               className="flex h-11 w-11 items-center justify-center"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.35)] transition-transform active:scale-90">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.08)] transition-transform active:scale-90">
                 <Plus className="h-5 w-5" aria-hidden="true" />
               </span>
             </button>
           ) : (
-            <div className="flex h-9 items-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.35)]" role="group" aria-label={`${dish.name} quantity`}>
+            <div className="flex h-9 items-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.08)]" role="group" aria-label={`${dish.name} quantity`}>
               <button
                 type="button"
                 onClick={() => onQuantity(dish, quantity - 1)}
@@ -97,7 +97,7 @@ interface RecommendedDishesProps {
 export function RecommendedDishes({ dishes, quantityFor, isAvailable, onAdd, onQuantity }: RecommendedDishesProps) {
   if (dishes.length === 0) {
     return (
-      <p className="mx-5 rounded-[20px] bg-white p-5 text-sm md:mx-8 lg:mx-10 text-[#77716D] shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+      <p className="mx-5 rounded-[20px] bg-white p-5 text-sm md:mx-8 lg:mx-10 text-[#77716D] border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
         No dishes match these filters yet. Try another category or reset the filters.
       </p>
     )

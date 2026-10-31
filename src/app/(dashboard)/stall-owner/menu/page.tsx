@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { KeyRound, Minus, Pencil, Plus, Search, Trash2, X } from "lucide-react"
 import { StallShell } from "@/components/dashboard/StallShell"
 import { applyMenuOverrides, type CatalogItem } from "@/lib/catalog"
+import { useDialogFocus } from "@/lib/use-dialog-focus"
 import { useMounted } from "@/lib/use-mounted"
 import { useMenuAdminStore } from "@/stores/menu-admin"
 import { DEFAULT_PASSWORD, useStallAuthStore } from "@/stores/stall-auth"
@@ -62,11 +63,8 @@ function ItemDialog({
   const [f, setF] = useState(initial)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [onClose])
+  const dialog = useRef<HTMLFormElement>(null)
+  useDialogFocus(true, dialog, onClose, "#f-name")
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,6 +85,7 @@ function ItemDialog({
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
       <button type="button" aria-label="Close" className="absolute inset-0 bg-[#26160F]/40" onClick={onClose} />
       <form
+        ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -387,7 +386,7 @@ function ManagerView({ stall }: { stall: { id: string; name: string } }) {
               {removing === i.id ? (
                 <>
                   <button type="button" onClick={() => { removeItem(i.id, by); setRemoving(null) }} className={`${btn} bg-[#EF493B] text-white`}>Remove {i.name}</button>
-                  <button type="button" onClick={() => setRemoving(null)} className={`${btn} border border-[#E6D6C8] bg-white`}>Keep</button>
+                  <button type="button" autoFocus onKeyDown={(e) => e.key === "Escape" && setRemoving(null)} onClick={() => setRemoving(null)} className={`${btn} border border-[#E6D6C8] bg-white`}>Keep</button>
                 </>
               ) : (
                 <button type="button" onClick={() => setRemoving(i.id)} aria-label={`Remove ${i.name}`} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#EF493B] shadow-sm"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>

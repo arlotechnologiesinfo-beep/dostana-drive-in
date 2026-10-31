@@ -27,6 +27,8 @@ export interface CatalogItem {
   rating: number
   cuisines: string[]
   bestseller: boolean
+  /** portions per serving; demo default until stalls set it */
+  serves: number
   /** false when switched off, out of stock, or the stall is closed */
   available: boolean
   /** units left; null means unlimited */
@@ -65,6 +67,7 @@ const BASE: CatalogItem[] = [
     rating: d.rating,
     cuisines: d.cuisines,
     bestseller: true,
+    serves: 1,
     available: true,
     stock: null,
     custom: false,
@@ -85,6 +88,7 @@ const BASE: CatalogItem[] = [
       rating: demoRating(i.id),
       cuisines: [...(i.category_name ? [i.category_name] : []), ...(i.subcategory ? [i.subcategory] : []), ...stall.cuisines],
       bestseller: Boolean(i.is_bestseller || i.is_popular),
+      serves: 1,
       available: i.is_available,
       stock: null,
       custom: false,
@@ -135,6 +139,7 @@ function applyOverrides(overrides: Overrides, stallOpen: Record<string, boolean>
       rating: demoRating(o.id),
       cuisines: [...(o.category ? [o.category] : []), ...stall.cuisines],
       bestseller: false,
+      serves: 1,
       available: o.available ?? true,
       stock: o.stock ?? null,
       custom: true,

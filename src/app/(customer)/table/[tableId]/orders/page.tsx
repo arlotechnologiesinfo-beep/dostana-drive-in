@@ -35,7 +35,7 @@ export default function MyOrdersPage() {
       {!ready ? (
         <p className="text-sm text-[#77716D]">Loading your orders…</p>
       ) : list.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFE7D6]">
             <ConciergeBell className="h-6 w-6 text-[#E85D16]" aria-hidden="true" />
           </span>
@@ -46,14 +46,14 @@ export default function MyOrdersPage() {
           </Link>
         </div>
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2 md:gap-5">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
           {list.map((o) => {
             const step = overallStep(o)
             return (
               <li key={o.id}>
                 <Link
                   href={`/table/${tableId}/orders/${o.id}`}
-                  className="flex items-center gap-3 rounded-[22px] bg-white p-4 shadow-[0_6px_24px_rgba(48,32,25,0.07)] transition-transform active:scale-[0.99]"
+                  className="flex items-center gap-3 rounded-[22px] bg-white p-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)] transition-transform active:scale-[0.99]"
                 >
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center justify-between gap-2">

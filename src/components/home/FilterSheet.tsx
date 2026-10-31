@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
+import { useRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { X } from "lucide-react"
+import { useDialogFocus } from "@/lib/use-dialog-focus"
 import { NO_FILTERS, PRICE_MAX, type HomeFilters } from "@/lib/home-filters"
 
 interface FilterSheetProps {
@@ -40,12 +41,8 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 }
 
 export function FilterSheet({ open, filters, onChange, onClose, resultCount }: FilterSheetProps) {
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [open, onClose])
+  const panel = useRef<HTMLDivElement>(null)
+  useDialogFocus(open, panel, onClose)
 
   const toggleCuisine = (c: string) =>
     onChange({
@@ -69,14 +66,15 @@ export function FilterSheet({ open, filters, onChange, onClose, resultCount }: F
             onClick={onClose}
           />
           <motion.div
+            ref={panel}
             role="dialog"
             aria-modal="true"
             aria-label="Filters"
-            className="relative flex max-h-[92vh] w-full max-w-[430px] flex-col md:max-w-[600px] rounded-t-[28px] bg-[#FFF9F2] shadow-[0_-12px_40px_rgba(48,32,25,0.14)]"
+            className="relative flex max-h-[92vh] w-full max-w-[430px] flex-col md:max-w-[600px] rounded-t-[28px] bg-[#FFF9F2] shadow-[0_-12px_40px_rgba(48,32,25,0.08)]"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 380, damping: 38 }}
+            exit={{ y: "100%", transition: { duration: 0.15, ease: [0.7, 0, 0.84, 0] } }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="px-5 pt-3">
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[#F1E7DE]" aria-hidden="true" />

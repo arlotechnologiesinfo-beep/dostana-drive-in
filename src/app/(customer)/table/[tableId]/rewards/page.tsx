@@ -72,7 +72,7 @@ export default function OffersPage() {
                   {copied === o.code ? "Copied" : o.code}
                 </button>
               </span>
-              <span className="absolute -right-8 top-1/2 h-[150px] w-[150px] -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
+              <span className="absolute -right-8 top-1/2 h-[150px] w-[150px] -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
                 <Image src={o.image} alt="" fill sizes="150px" className="object-cover" />
               </span>
             </li>

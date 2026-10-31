@@ -97,10 +97,10 @@ export default function LandingPage() {
               <li key={c.title}>
                 <Link
                   href={c.href}
-                  className="group block overflow-hidden rounded-2xl border border-[#F1E7DE] bg-white shadow-[0_6px_24px_rgba(48,32,25,0.06)] transition-shadow hover:shadow-[0_12px_32px_rgba(48,32,25,0.12)]"
+                  className="group block overflow-hidden rounded-2xl border border-[#F1E7DE] bg-white shadow-[0_6px_24px_rgba(48,32,25,0.06)] transition-shadow hover:shadow-[0_12px_32px_rgba(48,32,25,0.08)]"
                 >
                   <span className="relative block h-[150px] overflow-hidden md:h-[190px]">
-                    <Image src={c.image} alt="" fill sizes="(max-width: 640px) 100vw, 340px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={c.image} alt="" fill sizes="(max-width: 640px) 100vw, 340px" className="object-cover transition-transform duration-300 group-hover:scale-105" />
                   </span>
                   <span className="block p-4 md:p-5">
                     <span className="block text-xl font-bold text-[#26160F]">{c.title}</span>
@@ -129,7 +129,7 @@ export default function LandingPage() {
               return (
                 <li key={c.title} className="w-[220px] shrink-0 snap-start md:w-auto">
                   <Link href={`/select-table`} className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#FFF1E5]">
-                    <Image src={c.image} alt="" fill sizes="(max-width: 768px) 220px, 210px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={c.image} alt="" fill sizes="(max-width: 768px) 220px, 210px" className="object-cover transition-transform duration-300 group-hover:scale-105" />
                     <span className="absolute inset-0 bg-gradient-to-t from-[#26160F]/85 via-[#26160F]/10 to-transparent" aria-hidden="true" />
                     <span className="absolute inset-x-0 bottom-0 block p-4 text-white">
                       <span className="block text-lg font-bold leading-6">{c.title}</span>
@@ -152,7 +152,7 @@ export default function LandingPage() {
               <li key={s.id}>
                 <Link
                   href="/select-table"
-                  className="flex min-h-[72px] items-center justify-between gap-3 rounded-2xl border border-[#F1E7DE] bg-white px-5 py-3 transition-shadow hover:shadow-[0_8px_24px_rgba(48,32,25,0.1)]"
+                  className="flex min-h-[72px] items-center justify-between gap-3 rounded-2xl border border-[#F1E7DE] bg-white px-5 py-3 transition-shadow hover:shadow-[0_8px_24px_rgba(48,32,25,0.08)]"
                 >
                   <span className="min-w-0">
                     <span className="block truncate text-base font-semibold text-[#26160F]">{s.name}</span>
@@ -173,7 +173,7 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-5 md:grid-cols-2 md:gap-14 md:px-8">
             <FloatingFoodFrame>
               <div className="absolute -inset-4 rounded-[40px] bg-[#FFE7D6]" aria-hidden="true" />
-              <div className="relative rounded-[32px] border-[6px] border-[#26160F] bg-white p-6 shadow-[0_24px_48px_rgba(38,22,15,0.2)]">
+              <div className="relative rounded-[32px] border-[6px] border-[#26160F] bg-white p-6 shadow-[0_24px_48px_rgba(38,22,15,0.08)]">
                 <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#E85D16]">
                   <QrCode className="h-4 w-4" aria-hidden="true" /> Table 12
                 </p>

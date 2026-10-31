@@ -27,7 +27,7 @@ export default function FavoritesPage() {
   return (
     <SubPage tableId={tableId} title="Favorites">
       {stalls.length === 0 && dishes.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FCE8E7]">
             <Heart className="h-6 w-6 text-[#EF493B]" aria-hidden="true" />
           </span>
@@ -42,7 +42,7 @@ export default function FavoritesPage() {
           {stalls.length > 0 && (
             <section aria-label="Favorite stalls">
               <h2 className="mb-2 text-sm font-semibold text-[#26160F]">Stalls</h2>
-              <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
+              <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
                 {stalls.map((s) => <li key={s.id}><StallRow stall={s} tableId={tableId} /></li>)}
               </ul>
             </section>
@@ -50,7 +50,7 @@ export default function FavoritesPage() {
           {dishes.length > 0 && (
             <section aria-label="Favorite dishes">
               <h2 className="mb-2 text-sm font-semibold text-[#26160F]">Dishes</h2>
-              <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
+              <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
                 {dishes.map((d) => (
                   <li key={d.id}>
                     <DishRow item={d} tableId={tableId} quantity={cart.quantityFor(d.id)} onAdd={cart.add} onQuantity={cart.setQty} />

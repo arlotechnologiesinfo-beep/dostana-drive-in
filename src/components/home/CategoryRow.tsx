@@ -29,7 +29,7 @@ export function CategoryRow({ categories, selectedId, onSelect }: CategoryRowPro
                   }`}
                   style={{ backgroundColor: c.bg }}
                 >
-                  <span className="absolute inset-1.5 overflow-hidden rounded-full shadow-[0_3px_10px_rgba(48,32,25,0.14)]">
+                  <span className="absolute inset-1.5 overflow-hidden rounded-full shadow-[0_3px_10px_rgba(48,32,25,0.08)]">
                     <Image src={c.image} alt="" fill sizes="64px" className="object-cover" />
                   </span>
                 </span>

@@ -23,7 +23,7 @@ export default function CategoriesPage() {
 
   return (
     <SubPage tableId={tableId} title="Categories">
-      <ul className="grid gap-3 md:grid-cols-2 md:gap-5">
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
         {HOME_CATEGORIES.map((c) => {
           const count = catalog.filter((i) => i.cuisines.some((x) => c.tags.includes(x.toLowerCase()))).length
           return (
@@ -40,7 +40,7 @@ export default function CategoriesPage() {
                   </span>
                   <span className="block text-sm text-[#77716D]">{count > 0 ? `${count} items` : "Coming soon"}</span>
                 </span>
-                <span className="absolute -right-6 top-1/2 h-[132px] w-[132px] -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(48,32,25,0.15)] md:h-[160px] md:w-[160px]">
+                <span className="absolute -right-6 top-1/2 h-[132px] w-[132px] -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(48,32,25,0.08)] md:h-[160px] md:w-[160px]">
                   <Image src={c.image} alt="" fill sizes="160px" className="object-cover" />
                 </span>
               </Link>

@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import Image from "next/image"
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion"
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 
 const img = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=360&q=80`
 
@@ -28,13 +28,12 @@ const HERO_ITEMS: FloatItem[] = [
 
 function Floating({ item, progress, reduced }: { item: FloatItem; progress: ReturnType<typeof useScroll>["scrollYProgress"]; reduced: boolean }) {
   const y = useTransform(progress, [0, 1], [0, reduced ? 0 : -item.depth])
-  const spring = useSpring(y, { stiffness: 90, damping: 20, mass: 0.4 })
   const rot = useTransform(progress, [0, 1], [item.rotate, reduced ? item.rotate : item.rotate + 18])
   return (
     <motion.div
       aria-hidden="true"
-      style={{ left: item.x, top: item.y, width: item.size, height: item.size, y: spring, rotate: rot }}
-      className="pointer-events-none absolute hidden overflow-hidden rounded-full border-4 border-white/90 shadow-[0_18px_40px_rgba(0,0,0,0.35)] sm:block"
+      style={{ left: item.x, top: item.y, width: item.size, height: item.size, y, rotate: rot }}
+      className="pointer-events-none absolute hidden overflow-hidden rounded-full border-4 border-white/90 shadow-[0_18px_40px_rgba(0,0,0,0.08)] sm:block"
     >
       <Image src={item.src} alt="" fill sizes="160px" className="object-cover" />
     </motion.div>
@@ -88,10 +87,10 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
   return (
     <motion.div
       className={className}
-      initial={reduced ? false : { opacity: 0, y: 36 }}
+      initial={reduced ? false : { opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.3, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>
@@ -126,7 +125,7 @@ function RingItem({ src, cls, depth, progress, reduced }: { src: string; cls: st
     <motion.div
       aria-hidden="true"
       style={{ y }}
-      className={`pointer-events-none absolute z-10 overflow-hidden rounded-full border-4 border-white shadow-[0_14px_30px_rgba(38,22,15,0.3)] ${cls}`}
+      className={`pointer-events-none absolute z-10 overflow-hidden rounded-full border-4 border-white shadow-[0_14px_30px_rgba(38,22,15,0.08)] ${cls}`}
     >
       <Image src={src} alt="" fill sizes="128px" className="object-cover" />
     </motion.div>

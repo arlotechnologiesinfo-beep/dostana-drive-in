@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -18,6 +19,7 @@ export default function CartPage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity)
   const clearCart = useCartStore((s) => s.clearCart)
 
+  const [confirmClear, setConfirmClear] = useState(false)
   const lines = mounted ? items : []
   const subtotal = lines.reduce((n, i) => n + i.price * i.quantity, 0)
   const tax = Math.round(subtotal * TAX_RATE)
@@ -35,14 +37,23 @@ export default function CartPage() {
       nav={false}
       right={
         lines.length > 0 ? (
-          <button type="button" onClick={clearCart} className="min-h-11 text-sm font-medium text-[#E85D16]">
+          confirmClear ? (
+          <span className="flex items-center gap-1">
+            <button type="button" onClick={() => { clearCart(); setConfirmClear(false) }} className="min-h-11 rounded-full bg-[#EF493B] px-3 text-xs font-semibold text-white">
+              Remove all {lines.length} items
+            </button>
+            <button type="button" autoFocus onKeyDown={(e) => e.key === "Escape" && setConfirmClear(false)} onClick={() => setConfirmClear(false)} className="min-h-11 px-2 text-xs font-medium text-[#77716D]">Keep</button>
+          </span>
+        ) : (
+          <button type="button" onClick={() => setConfirmClear(true)} className="min-h-11 text-sm font-medium text-[#E85D16]">
             Clear All
           </button>
+        )
         ) : null
       }
     >
       {lines.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="flex flex-col items-center gap-3 rounded-[24px] bg-white px-6 py-14 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFE7D6]">
             <ShoppingBag className="h-6 w-6 text-[#E85D16]" aria-hidden="true" />
           </span>
@@ -58,7 +69,7 @@ export default function CartPage() {
             <p className="mb-3 text-sm text-[#77716D]">Table {parseInt(tableId, 10)}</p>
             <div className="space-y-4">
               {Object.entries(byStall).map(([stallId, stallLines]) => (
-                <section key={stallId} aria-label={stallLines[0].stall_name} className="rounded-[22px] bg-white p-4 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+                <section key={stallId} aria-label={stallLines[0].stall_name} className="rounded-[22px] bg-white p-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
                   <h2 className="mb-3 text-base font-bold text-[#26160F]">{stallLines[0].stall_name}</h2>
                   <ul className="divide-y divide-[#F1E7DE]">
                     {stallLines.map((i) => (
@@ -81,7 +92,7 @@ export default function CartPage() {
             </div>
           </div>
 
-          <section aria-label="Bill summary" className="mt-4 rounded-[22px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)] lg:sticky lg:top-8 lg:mt-9">
+          <section aria-label="Bill summary" className="mt-4 rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)] lg:sticky lg:top-8 lg:mt-9">
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className="text-[#77716D]">Item Total</dt>

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Bell, ChevronDown, ChevronRight, Crown, MapPin, User } from "lucide-react"
+import { Bell, ChevronDown, MapPin, Sparkles, User } from "lucide-react"
 
 interface HomeHeaderProps {
   tableId: string
@@ -25,7 +25,7 @@ export function HomeHeader({ tableId, tableNumber, greeting, hasUnread, onCallWa
             aria-expanded={open}
             aria-haspopup="dialog"
             aria-label={`Dining at table ${tableNumber}`}
-            className="flex min-h-11 items-center gap-2.5 text-left"
+            className="flex min-h-11 items-center gap-3 text-left"
           >
             <MapPin className="h-6 w-6 shrink-0 fill-[#F4772B] text-[#F4772B]" strokeWidth={1.5} aria-hidden="true" />
             <span className="block">
@@ -51,7 +51,7 @@ export function HomeHeader({ tableId, tableNumber, greeting, hasUnread, onCallWa
               <div
                 role="dialog"
                 aria-label="Table details"
-                className="absolute left-0 top-full z-40 mt-2 w-64 rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(48,32,25,0.14)]"
+                className="absolute left-0 top-full z-40 mt-2 w-64 rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(48,32,25,0.08)]"
               >
                 <p className="text-sm font-semibold text-[#26160F]">Table {tableNumber}</p>
                 <p className="mt-0.5 text-xs text-[#77716D]">Your table session is active. Orders go to this table.</p>
@@ -84,36 +84,26 @@ export function HomeHeader({ tableId, tableNumber, greeting, hasUnread, onCallWa
           <Link
             href={`/table/${tableId}/profile`}
             aria-label="Your profile"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-[#FFD9C2] shadow-[0_4px_16px_rgba(48,32,25,0.12)] transition-transform active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-[#FFD9C2] shadow-[0_4px_16px_rgba(48,32,25,0.08)] transition-transform active:scale-95"
           >
             <User className="h-5 w-5 text-[#E85D16]" aria-hidden="true" />
           </Link>
         </div>
       </div>
 
-      <div className="mt-4 flex items-end justify-between gap-2">
-        <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-medium leading-6 text-[#E85D16] md:text-lg">{greeting},</p>
-          <h1 className="text-[clamp(18px,4.9vw,26px)] font-extrabold leading-[1.25] text-[#26160F] md:text-[36px] md:leading-[1.2] lg:text-[46px]">
-            What would you like
-            <br />
-            to eat today? <span aria-hidden="true">😊</span>
-          </h1>
-        </div>
-
-        <Link
-          href={`/table/${tableId}/rewards`}
-          className="group flex w-[116px] shrink-0 flex-col gap-1.5 rounded-[18px] bg-[#FFE7D6] p-3 md:w-[240px] md:gap-2 md:rounded-[22px] md:p-5 transition-transform active:scale-[0.98]"
-        >
-          <span className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4772B]">
-              <Crown className="h-4 w-4 text-white" aria-hidden="true" />
-            </span>
-            <ChevronRight className="h-4 w-4 text-[#E85D16] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-          </span>
-          <span className="text-sm font-bold leading-4 text-[#26160F] md:text-lg md:leading-6">Join Gold</span>
-          <span className="text-xs leading-4 text-[#77716D] md:text-sm md:leading-5">Exclusive dining benefits</span>
-        </Link>
+      <div className="relative mt-4 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#FFE7D6] via-[#FFD9C2] to-[#FFC9A3] p-5 shadow-[0_8px_24px_rgba(244,119,43,0.08)] md:p-8">
+        <span className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/40" aria-hidden="true" />
+        <span className="pointer-events-none absolute -bottom-10 right-10 h-24 w-24 rounded-full bg-[#F4772B]/15" aria-hidden="true" />
+        <p className="relative inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#E85D16] md:text-sm">
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+          {greeting}
+        </p>
+        <h1 className="relative mt-3 text-[26px] font-extrabold leading-[1.15] text-[#26160F] md:text-[36px] lg:text-[46px]">
+          What would you like
+          <br />
+          to eat <span className="text-[#E85D16]">today?</span>
+        </h1>
+        <p className="relative mt-2 text-sm text-[#77716D]">Order from six stalls, served at Table {tableNumber}.</p>
       </div>
     </header>
   )

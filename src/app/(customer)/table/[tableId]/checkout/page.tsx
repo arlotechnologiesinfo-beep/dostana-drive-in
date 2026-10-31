@@ -67,7 +67,7 @@ export default function PaymentPage() {
   if (placed) {
     return (
       <SubPage tableId={tableId} title="Payment" nav={false} backHref={`/table/${tableId}/orders`}>
-        <p role="status" className="rounded-[24px] bg-white px-6 py-12 text-center text-sm text-[#77716D] shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <p role="status" className="rounded-[24px] bg-white px-6 py-12 text-center text-sm text-[#77716D] border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           Order placed. Taking you to your order…
         </p>
       </SubPage>
@@ -77,7 +77,7 @@ export default function PaymentPage() {
   if (mounted && lines.length === 0) {
     return (
       <SubPage tableId={tableId} title="Payment" nav={false} backHref={`/table/${tableId}/cart`}>
-        <div className="rounded-[24px] bg-white px-6 py-12 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="rounded-[24px] bg-white px-6 py-12 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <h2 className="text-xl font-bold text-[#26160F]">Your cart is empty</h2>
           <p className="mt-1 text-sm text-[#77716D]">Add something from a stall before paying.</p>
           <Link href={`/table/${tableId}/stalls`} className="mt-4 inline-flex min-h-12 items-center rounded-full bg-[#F4772B] px-7 text-[15px] font-semibold text-white">
@@ -102,7 +102,7 @@ export default function PaymentPage() {
                   <label
                     key={m.id}
                     className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-[20px] border-2 bg-white px-4 transition-colors ${
-                      selected ? "border-[#F4772B]" : "border-transparent shadow-[0_6px_24px_rgba(48,32,25,0.07)]"
+                      selected ? "border-[#F4772B]" : "border-transparent border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]"
                     }`}
                   >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFE7D6] text-[#E85D16]">
@@ -144,7 +144,7 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        <section aria-label="Bill summary" className="mt-6 rounded-[22px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)] lg:mt-9">
+        <section aria-label="Bill summary" className="mt-6 rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)] lg:mt-9">
           <p className="mb-3 text-sm text-[#77716D]">Table {parseInt(tableId, 10)} · {lines.length} {lines.length === 1 ? "line" : "lines"}</p>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-[#77716D]">Item Total</dt><dd className="font-medium">₹{subtotal}</dd></div>

@@ -20,7 +20,7 @@ export default function OrderTrackingPage() {
   if (!order) {
     return (
       <SubPage tableId={tableId} title="Order" nav={false} backHref={`/table/${tableId}/orders`}>
-        <div className="rounded-[24px] bg-white px-6 py-12 text-center shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="rounded-[24px] bg-white px-6 py-12 text-center border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <h2 className="text-xl font-bold text-[#26160F]">We couldn&apos;t find that order</h2>
           <Link href={`/table/${tableId}/orders`} className="mt-4 inline-flex min-h-12 items-center rounded-full bg-[#F4772B] px-7 text-[15px] font-semibold text-white">
             My Orders
@@ -36,7 +36,7 @@ export default function OrderTrackingPage() {
   return (
     <SubPage tableId={tableId} title={`Order #${order.id.replace("DOSTANA-", "")}`} nav={false} backHref={`/table/${tableId}/orders`}>
       <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-8">
-        <section aria-label="Order progress" className="rounded-[22px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <section aria-label="Order progress" className="rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <p className="mb-4 text-sm text-[#77716D]">Table {parseInt(order.table_id, 10)}</p>
           {step < 0 ? (
             <p className="rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm text-[#EF493B]">This order was cancelled. Ask a waiter if you need help.</p>
@@ -75,7 +75,7 @@ export default function OrderTrackingPage() {
 
         <div className="mt-4 space-y-4 lg:mt-0">
           {order.child_orders.map((c) => (
-            <section key={c.id} aria-label={c.stall_name} className="rounded-[22px] bg-white p-4 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+            <section key={c.id} aria-label={c.stall_name} className="rounded-[22px] bg-white p-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h2 className="truncate text-base font-bold text-[#26160F]">{c.stall_name}</h2>
                 <span className="shrink-0 rounded-full bg-[#FFE7D6] px-3 py-1 text-xs font-semibold text-[#E85D16]">{statusLabel(c.status)}</span>
@@ -91,7 +91,7 @@ export default function OrderTrackingPage() {
             </section>
           ))}
 
-          <section aria-label="Bill" className="rounded-[22px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+          <section aria-label="Bill" className="rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between"><dt className="text-[#77716D]">Item Total</dt><dd className="font-medium">₹{order.subtotal}</dd></div>
               <div className="flex justify-between"><dt className="text-[#77716D]">Taxes &amp; Charges</dt><dd className="font-medium">₹{order.tax_amount}</dd></div>

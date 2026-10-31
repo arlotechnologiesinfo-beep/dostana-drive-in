@@ -40,13 +40,13 @@ export function BottomNav({ tableId }: BottomNavProps) {
         className="flex h-full min-w-0 flex-col items-center justify-center gap-0.5"
       >
         <span
-          className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors duration-200 ${
+          className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors duration-200 ${
             isActive ? "bg-[#FFE7D6]" : ""
           }`}
         >
           <Icon className={`h-[22px] w-[22px] ${isActive ? "text-[#F4772B]" : "text-[#77716D]"}`} aria-hidden="true" />
         </span>
-        <span className={`text-xs leading-4 ${isActive ? "font-semibold text-[#F4772B]" : "font-medium text-[#77716D]"}`}>
+        <span className={`text-[11px] leading-4 ${isActive ? "font-bold text-[#E85D16]" : "font-medium text-[#77716D]"}`}>
           {label}
         </span>
       </Link>
@@ -54,9 +54,9 @@ export function BottomNav({ tableId }: BottomNavProps) {
   }
 
   return (
-    <nav aria-label="Main" className="pointer-events-none fixed inset-x-0 bottom-0 z-50">
-      <div className="pointer-events-auto mx-auto max-w-[430px] px-4 md:max-w-[560px] pb-[max(env(safe-area-inset-bottom),12px)]">
-        <div className="relative grid h-[72px] grid-cols-5 items-center rounded-full bg-white shadow-[0_8px_32px_rgba(48,32,25,0.12)]">
+    <nav aria-label="Main" className="pointer-events-none fixed inset-x-0 bottom-0 z-50 bg-gradient-to-t from-[#FFF9F2] via-[#FFF9F2]/80 to-transparent pt-8">
+      <div className="pointer-events-auto mx-auto max-w-[430px] px-3 md:max-w-[560px] pb-[max(env(safe-area-inset-bottom),10px)]">
+        <div className="relative grid h-[68px] grid-cols-5 items-center rounded-[28px] border border-[#F1E7DE] bg-white px-1 shadow-[0_10px_30px_rgba(48,32,25,0.08)]">
           {tab("home", "Home", base, House)}
           {tab("order", "Order", `${base}/orders`, ConciergeBell)}
 
@@ -65,7 +65,7 @@ export function BottomNav({ tableId }: BottomNavProps) {
               href={`${base}/cart`}
               aria-current={active === "cart" ? "page" : undefined}
               aria-label={count > 0 ? `Cart, ${count} ${count === 1 ? "item" : "items"}, ₹${total}` : "Cart, empty"}
-              className="absolute -top-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F4772B] shadow-[0_10px_24px_rgba(244,119,43,0.45)] ring-4 ring-[#FFF9F2] transition-transform active:scale-95"
+              className="absolute -top-7 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[#F4772B] shadow-[0_10px_24px_rgba(244,119,43,0.08)] ring-4 ring-[#FFF9F2] transition-transform active:scale-95"
             >
               <ShoppingCart className="h-7 w-7 text-white" aria-hidden="true" />
               {count > 0 && (
@@ -74,6 +74,7 @@ export function BottomNav({ tableId }: BottomNavProps) {
                 </span>
               )}
             </Link>
+            <span className={`absolute bottom-2 text-[11px] leading-4 ${active === "cart" ? "font-bold text-[#E85D16]" : "font-medium text-[#77716D]"}`}>Cart</span>
           </div>
 
           {tab("offers", "Offers", `${base}/rewards`, Tag)}

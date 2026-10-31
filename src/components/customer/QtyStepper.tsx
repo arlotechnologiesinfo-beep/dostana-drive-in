@@ -16,7 +16,7 @@ export function QtyStepper({ value, onChange, label, size = "sm", max = 20 }: Qt
     <div
       role="group"
       aria-label={`${label} quantity`}
-      className={`inline-flex ${h} items-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.35)]`}
+      className={`inline-flex ${h} items-center rounded-full bg-[#F4772B] text-white shadow-[0_4px_12px_rgba(244,119,43,0.08)]`}
     >
       <button
         type="button"

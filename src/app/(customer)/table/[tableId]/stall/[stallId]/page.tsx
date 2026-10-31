@@ -4,13 +4,14 @@ import { useMemo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { ArrowLeft, Clock, Heart, Star } from "lucide-react"
+import { ArrowLeft, Clock, Heart, IndianRupee, Star } from "lucide-react"
 import { CartToast } from "@/components/customer/CartToast"
 import { DishRow } from "@/components/customer/DishRow"
 import { FloatingCartBar } from "@/components/customer/FloatingCartBar"
 import { categoriesOf, getStall } from "@/lib/catalog"
 import { useCatalog } from "@/lib/use-catalog"
 import { useCartActions } from "@/lib/use-cart-actions"
+import { useMenuAdminStore } from "@/stores/menu-admin"
 import { useFavoritesStore } from "@/stores/favorites"
 
 export default function StallMenuPage() {
@@ -19,6 +20,7 @@ export default function StallMenuPage() {
   const stallId = String(params.stallId)
   const stall = getStall(stallId)
   const cart = useCartActions()
+  const open = useMenuAdminStore((s) => s.stallOpen[stallId] !== false)
   const favorite = useFavoritesStore((s) => s.stalls.includes(stallId))
   const toggleStall = useFavoritesStore((s) => s.toggleStall)
 
@@ -26,11 +28,15 @@ export default function StallMenuPage() {
   const menu = useMemo(() => catalog.filter((i) => i.stallId === stallId), [catalog, stallId])
   const categories = useMemo(() => categoriesOf(menu), [menu])
   const [selected, setSelected] = useState<string | null>(null)
+  const [diet, setDiet] = useState<"all" | "veg" | "nonveg">("all")
   const active = selected && categories.includes(selected) ? selected : (categories[0] ?? null)
 
   const visible = useMemo(
-    () => (active === "Recommended" ? menu.filter((i) => i.bestseller) : active ? menu.filter((i) => i.category === active) : menu),
-    [menu, active]
+    () =>
+      (active === "Recommended" ? menu.filter((i) => i.bestseller) : active ? menu.filter((i) => i.category === active) : menu)
+        .filter((i) => diet === "all" || (diet === "veg" ? i.veg : !i.veg))
+        .sort((a, b) => b.rating - a.rating),
+    [menu, active, diet]
   )
 
   if (!stall) {
@@ -49,7 +55,7 @@ export default function StallMenuPage() {
   return (
     <div className="min-h-screen bg-[#FFF9F2]">
       <div className="mx-auto w-full max-w-[430px] md:max-w-[820px] lg:max-w-[1100px]">
-        <div className="relative h-[220px] w-full overflow-hidden bg-[#FFF1E5] md:h-[320px] md:rounded-b-[32px] lg:mt-6 lg:rounded-[32px]">
+        <div className="relative h-[240px] w-full overflow-hidden bg-[#FFF1E5] md:h-[340px] md:rounded-b-[32px] lg:mt-6 lg:rounded-[32px]">
           <Image src={stall.image} alt="" fill priority sizes="(max-width: 430px) 100vw, 1100px" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#26160F]/55 via-transparent to-[#26160F]/20" aria-hidden="true" />
           <Link
@@ -68,26 +74,47 @@ export default function StallMenuPage() {
           >
             <Heart className={`h-5 w-5 ${favorite ? "fill-[#EF493B] text-[#EF493B]" : ""}`} aria-hidden="true" />
           </button>
-          <span className="absolute bottom-4 left-4 flex items-center gap-1 rounded-lg bg-white/95 px-2.5 py-1 text-sm font-bold text-[#145A25] md:bottom-6 md:left-6">
-            <Star className="h-4 w-4 fill-[#63B65B] text-[#63B65B]" aria-hidden="true" />
-            {stall.rating.toFixed(1)}
-          </span>
         </div>
 
-        <main className="px-5 pb-[140px] pt-4 md:px-8 lg:px-0">
-          <h1 className="text-2xl font-extrabold leading-8 text-[#26160F] md:text-4xl md:leading-[1.2]">{stall.name}</h1>
-          <p className="mt-1 text-sm text-[#77716D]">{stall.cuisines.join(" • ")}</p>
-          <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#302019]">
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4 text-[#77716D]" aria-hidden="true" />
-              {stall.prep}
-            </span>
-            <span className="h-4 w-px bg-[#F1E7DE]" aria-hidden="true" />
-            <span>₹{stall.avgForTwo} for two</span>
-          </p>
+        <main className="relative px-5 pb-[140px] md:px-8 lg:px-0">
+          <section className="relative -mt-14 rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(48,32,25,0.08)] md:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-[22px] font-extrabold leading-7 text-[#26160F] md:text-4xl md:leading-[1.2]">{stall.name}</h1>
+                <p className="mt-1 text-sm text-[#77716D]">{stall.cuisines.join(" • ")}</p>
+              </div>
+              <div className="shrink-0 text-right">
+                <span className="inline-flex items-center gap-1 rounded-xl bg-[#145A25] px-3 py-2 text-base font-bold text-white">
+                  {stall.rating.toFixed(1)}
+                  <Star className="h-4 w-4 fill-white" aria-hidden="true" />
+                </span>
+                <p className="mt-1 text-xs text-[#77716D]">Demo rating</p>
+              </div>
+            </div>
+            <ul className="mt-3 flex flex-wrap gap-2 border-t border-[#F1E7DE] pt-3 text-sm text-[#302019]">
+              <li className="inline-flex items-center gap-2 rounded-full bg-[#FFF4EA] px-3 py-2"><Clock className="h-4 w-4 text-[#E85D16]" aria-hidden="true" />{stall.prep}</li>
+              <li className="inline-flex items-center gap-2 rounded-full bg-[#FFF4EA] px-3 py-2"><IndianRupee className="h-4 w-4 text-[#E85D16]" aria-hidden="true" />{stall.avgForTwo} for two</li>
+              <li className={`inline-flex items-center gap-2 rounded-full px-3 py-2 ${open ? "bg-[#EAF6E5] text-[#145A25]" : "bg-[#FCE8E7] text-[#EF493B]"}`}>{open ? "Open now" : "Closed"}</li>
+            </ul>
+          </section>
+
+          <div role="group" aria-label="Food type" className="mt-4 flex gap-2">
+            {([["all", "All"], ["veg", "Veg"], ["nonveg", "Non-veg"]] as const).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={diet === id}
+                onClick={() => setDiet(id)}
+                className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors ${diet === id ? "border-[#F4772B] bg-[#FFE7D6] text-[#E85D16]" : "border-[#F1E7DE] bg-white text-[#302019]"}`}
+              >
+                {id !== "all" && <span className={`h-3 w-3 rounded-full ${id === "veg" ? "bg-[#145A25]" : "bg-[#EF493B]"}`} aria-hidden="true" />}
+                {label}
+              </button>
+            ))}
+          </div>
 
           {categories.length > 0 && (
-            <div className="sticky top-0 z-20 -mx-5 mt-4 bg-[#FFF9F2]/95 px-5 py-2 md:-mx-8 md:px-8 lg:mx-0 lg:px-0">
+            <div className="sticky top-0 z-20 -mx-5 mt-3 bg-[#FFF9F2]/95 px-5 py-2 md:-mx-8 md:px-8 lg:mx-0 lg:px-0">
               <div role="tablist" aria-label="Menu categories" className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {categories.map((c) => (
                   <button
@@ -108,11 +135,11 @@ export default function StallMenuPage() {
           )}
 
           {visible.length === 0 ? (
-            <p className="mt-6 rounded-[20px] bg-white p-6 text-center text-sm text-[#77716D] shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+            <p className="mt-6 rounded-[20px] bg-white p-6 text-center text-sm text-[#77716D] border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
               This menu is being set up. Please check back soon or ask a waiter.
             </p>
           ) : (
-            <ul className="mt-4 grid gap-3 md:grid-cols-2 md:gap-4">
+            <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
               {visible.map((d) => (
                 <li key={d.id}>
                   <DishRow item={d} tableId={tableId} quantity={cart.quantityFor(d.id)} onAdd={cart.add} onQuantity={cart.setQty} showStall={false} />

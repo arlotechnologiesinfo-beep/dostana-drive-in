@@ -33,7 +33,7 @@ export default function WelcomePage() {
   if (step === 0) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-[#FFF9F2] px-6 text-center">
-        <span className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-[#F4772B] shadow-[0_16px_40px_rgba(244,119,43,0.4)]">
+        <span className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-[#F4772B] shadow-[0_16px_40px_rgba(244,119,43,0.08)]">
           <ChefHat className="h-12 w-12 text-white" aria-hidden="true" />
         </span>
         <h1 className="mt-6 text-[34px] font-extrabold leading-9 tracking-tight text-[#26160F]">
@@ -67,7 +67,7 @@ export default function WelcomePage() {
       </div>
 
       <div className="flex w-full max-w-[430px] flex-1 flex-col items-center justify-center text-center md:max-w-[520px]">
-        <div className="relative h-[300px] w-[260px] overflow-hidden rounded-[48%_52%_46%_54%/52%_46%_54%_48%] bg-[#FFE7D6] shadow-[0_20px_48px_rgba(48,32,25,0.15)] md:h-[360px] md:w-[320px]">
+        <div className="relative h-[300px] w-[260px] overflow-hidden rounded-[48%_52%_46%_54%/52%_46%_54%_48%] bg-[#FFE7D6] shadow-[0_20px_48px_rgba(48,32,25,0.08)] md:h-[360px] md:w-[320px]">
           <Image src={slide.image} alt="" fill priority sizes="320px" className="object-cover" />
         </div>
         <h1 className="mt-8 whitespace-pre-line text-[28px] font-extrabold leading-9 text-[#26160F] md:text-4xl md:leading-[1.2]">{slide.title}</h1>
@@ -75,7 +75,7 @@ export default function WelcomePage() {
 
         <div className="mt-6 flex items-center gap-2" role="group" aria-label={`Step ${step} of 3`}>
           {SLIDES.map((_, i) => (
-            <span key={i} className={`h-2 rounded-full transition-all ${i + 1 === step ? "w-6 bg-[#F4772B]" : "w-2 bg-[#F1E7DE]"}`} aria-hidden="true" />
+            <span key={i} className={`h-2 w-2 rounded-full transition-[transform,background-color] duration-200 ease-out ${i + 1 === step ? "scale-x-[3] bg-[#F4772B]" : "bg-[#F1E7DE]"}`} aria-hidden="true" />
           ))}
         </div>
       </div>

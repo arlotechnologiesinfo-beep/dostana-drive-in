@@ -30,8 +30,8 @@ export default function ProfilePage() {
   return (
     <SubPage tableId={tableId} title="Profile">
       <div className="md:grid md:grid-cols-2 md:gap-6">
-        <section aria-label="Your details" className="flex flex-col items-center gap-3 rounded-[24px] bg-white p-6 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
-          <span className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-[#FFD9C2] text-3xl font-bold text-[#E85D16] shadow-[0_4px_16px_rgba(48,32,25,0.12)]">
+        <section aria-label="Your details" className="flex flex-col items-center gap-3 rounded-[24px] bg-white p-6 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
+          <span className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-[#FFD9C2] text-3xl font-bold text-[#E85D16] shadow-[0_4px_16px_rgba(48,32,25,0.08)]">
             {initial || "D"}
           </span>
           <div className="w-full">
@@ -64,7 +64,7 @@ export default function ProfilePage() {
           <ul className="space-y-3">
             {rows.map(({ icon: Icon, label, value, href }) => (
               <li key={label}>
-                <Link href={href} className="flex min-h-16 items-center gap-4 rounded-[20px] bg-white px-4 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+                <Link href={href} className="flex min-h-16 items-center gap-4 rounded-[20px] bg-white px-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFE7D6] text-[#E85D16]">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>

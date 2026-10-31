@@ -11,7 +11,7 @@ export function StallCard({ stall, tableId }: { stall: HomeStall; tableId: strin
   const toggleStall = useFavoritesStore((s) => s.toggleStall)
 
   return (
-    <article className="relative w-[232px] shrink-0 snap-start overflow-hidden md:w-full rounded-[20px] bg-white shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+    <article className="relative w-[232px] shrink-0 snap-start overflow-hidden md:w-full rounded-[20px] bg-white border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
       <Link href={`/table/${tableId}/stall/${stall.id}`} className="block" aria-label={`${stall.name}, rated ${stall.rating}`}>
         <div className="relative h-[136px] w-full bg-[#FFF1E5] md:h-[190px]">
           <Image src={stall.image} alt="" fill sizes="232px" className="object-cover" />
@@ -20,7 +20,7 @@ export function StallCard({ stall, tableId }: { stall: HomeStall; tableId: strin
             {stall.rating.toFixed(1)}
           </span>
         </div>
-        <div className="space-y-1 px-3.5 pb-3.5 pt-3">
+        <div className="space-y-1 px-4 pb-4 pt-3">
           <h3 className="truncate text-base font-bold leading-6 text-[#26160F] md:text-lg">{stall.name}</h3>
           <p className="truncate text-xs leading-4 text-[#77716D]">{stall.cuisines.join(" • ")}</p>
           <p className="flex items-center gap-2 pt-1 text-xs leading-4 text-[#302019]">
@@ -59,7 +59,7 @@ interface PopularStallsProps {
 export function PopularStalls({ stalls, tableId }: PopularStallsProps) {
   if (stalls.length === 0) {
     return (
-      <p className="mx-5 rounded-[20px] bg-white p-5 text-sm md:mx-8 lg:mx-10 text-[#77716D] shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+      <p className="mx-5 rounded-[20px] bg-white p-5 text-sm md:mx-8 lg:mx-10 text-[#77716D] border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
         No stalls match these filters yet. Try another category or reset the filters.
       </p>
     )

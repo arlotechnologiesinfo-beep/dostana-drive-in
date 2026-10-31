@@ -17,7 +17,7 @@ export default function SelectTablePage() {
         <h1 className="text-[28px] font-extrabold leading-9 text-[#26160F]">Select Your Table</h1>
         <p className="mt-1 text-sm text-[#77716D]">Enter or scan your table QR to start ordering.</p>
 
-        <div className="mt-6 rounded-[24px] bg-white p-5 shadow-[0_6px_24px_rgba(48,32,25,0.07)]">
+        <div className="mt-6 rounded-[24px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <TableEntryForm id="select-table" buttonLabel="Continue" />
         </div>
 

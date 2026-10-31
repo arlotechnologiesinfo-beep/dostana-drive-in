@@ -9,7 +9,7 @@ export default function AllStallsPage() {
   const tableId = String(useParams().tableId).padStart(2, "0")
   return (
     <SubPage tableId={tableId} title="Popular Stalls">
-      <ul className="grid gap-3 md:grid-cols-2 md:gap-5">
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
         {HOME_STALLS.map((s) => (
           <li key={s.id}>
             <StallRow stall={s} tableId={tableId} />

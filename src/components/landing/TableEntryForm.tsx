@@ -54,7 +54,7 @@ export function TableEntryForm({ id, buttonLabel = "Start ordering", variant = "
             aria-describedby={error ? `${id}-error` : undefined}
             className={`h-14 w-full appearance-none rounded-2xl border bg-white pl-12 pr-11 text-[15px] text-[#302019] outline-none focus:border-[#F4772B] ${
               error ? "border-[#EF493B]" : "border-[#F1E7DE]"
-            } ${hero ? "shadow-[0_8px_24px_rgba(0,0,0,0.15)]" : ""}`}
+            } ${hero ? "shadow-[0_8px_24px_rgba(0,0,0,0.08)]" : ""}`}
           >
             <option value="">Enter your table number</option>
             {TABLES.map((t) => (
@@ -65,13 +65,13 @@ export function TableEntryForm({ id, buttonLabel = "Start ordering", variant = "
         </div>
         <button
           type="submit"
-          className="h-14 shrink-0 rounded-2xl bg-[#F4772B] px-8 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(244,119,43,0.35)] transition-colors hover:bg-[#E85D16]"
+          className="h-14 shrink-0 rounded-2xl bg-[#F4772B] px-8 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(244,119,43,0.08)] transition-colors hover:bg-[#E85D16]"
         >
           {buttonLabel}
         </button>
       </div>
       {error && (
-        <p id={`${id}-error`} role="alert" className={`mt-2 text-sm ${hero ? "rounded-lg bg-white/95 px-3 py-1.5 text-[#EF493B]" : "text-[#EF493B]"}`}>
+        <p id={`${id}-error`} role="alert" className={`mt-2 text-sm ${hero ? "rounded-lg bg-white/95 px-3 py-2 text-[#EF493B]" : "text-[#EF493B]"}`}>
           {error}
         </p>
       )}

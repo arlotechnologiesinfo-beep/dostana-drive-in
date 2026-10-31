@@ -11,7 +11,7 @@ export function StallRow({ stall, tableId }: { stall: HomeStall; tableId: string
   const toggleStall = useFavoritesStore((s) => s.toggleStall)
 
   return (
-    <article className="relative flex items-center gap-3 rounded-[20px] bg-white p-3 shadow-[0_6px_24px_rgba(48,32,25,0.07)] md:gap-5 md:p-4">
+    <article className="relative flex items-center gap-3 rounded-[20px] bg-white p-3 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)] md:gap-5 md:p-4">
       <Link href={`/table/${tableId}/stall/${stall.id}`} className="flex min-w-0 flex-1 items-center gap-3 md:gap-5" aria-label={`${stall.name}, rated ${stall.rating}`}>
         <span className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-2xl bg-[#FFF1E5] md:h-[120px] md:w-[120px]">
           <Image src={stall.image} alt="" fill sizes="120px" className="object-cover" />
