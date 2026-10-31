@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { Bell, ChevronRight, ConciergeBell, Grid2x2, Heart, MapPin, Pencil, Repeat, Search, Store, Tag, User } from "lucide-react"
+import { Bell, ChevronRight, ConciergeBell, LifeBuoy, Grid2x2, Heart, MapPin, Pencil, Repeat, Search, Store, Tag, User } from "lucide-react"
 import { CallWaiterModal } from "@/components/customer/CallWaiterModal"
 import { SubPage } from "@/components/customer/SubPage"
 import { useMounted } from "@/lib/use-mounted"
@@ -19,6 +19,7 @@ export default function MorePage() {
 
   const features = [
     { icon: Bell, text: "Call waiter", hint: "Water, bill, help", tone: "bg-[#FFE7D6] text-[#E85D16]", onClick: () => setWaiterOpen(true) },
+    { href: `${base}/help`, icon: LifeBuoy, text: "Help and FAQs", hint: "Chat, cancel, refunds", tone: "bg-[#FFE7D6] text-[#E85D16]" },
     { href: `${base}/orders`, icon: ConciergeBell, text: "My Orders", hint: "Track every stall", tone: "bg-[#EAF6E5] text-[#145A25]" },
     { href: `${base}/rewards`, icon: Tag, text: "Offers", hint: "Deals and codes", tone: "bg-[#FCE8E7] text-[#EF493B]" },
     { href: `${base}/favorites`, icon: Heart, text: "Favorites", hint: "Saved items", tone: "bg-[#FCE8E7] text-[#EF493B]" },

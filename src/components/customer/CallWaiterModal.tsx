@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { createWaiterRequest } from "@/lib/orders-db"
 import { X, Bell, ConciergeBell, Droplets, Receipt, Utensils, Sparkles, HelpCircle, CheckCircle2, Clock } from "lucide-react"
 
 interface CallWaiterModalProps {
@@ -32,21 +33,13 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
 
     setIsSubmitting(true)
     try {
-      const res = await fetch("/api/waiter-requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          table_id: tableId,
-          request_type: selectedType,
-        }),
-      })
-
-      const data = await res.json()
-      if (!res.ok) {
-        if (data.cooldown_seconds) {
-          setCooldownSeconds(data.cooldown_seconds)
+      // Requests live in this browser's storage, so they're created here rather than through the server.
+      const res = createWaiterRequest(tableId, selectedType)
+      if (!res.success) {
+        if (res.cooldown_seconds) {
+          setCooldownSeconds(res.cooldown_seconds)
         } else {
-          alert(data.error || "Failed to send request.")
+          alert(res.error || "Failed to send request.")
         }
       } else {
         setSuccessMessage("Staff notified! A team member is on their way to Table " + tableId)

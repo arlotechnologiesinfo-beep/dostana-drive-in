@@ -1091,3 +1091,11 @@ html[data-staff-hc="true"] body { color: #000; }
 html[data-staff-hc="true"] .text-gold,
 html[data-staff-hc="true"] [class*="text-[#7A5A10]"] { color: #5A3F00; }
 html[data-staff-hc="true"] :focus-visible { outline: 3px solid #000 !important; outline-offset: 3px !important; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[toast-in"] { animation: none; }
+}

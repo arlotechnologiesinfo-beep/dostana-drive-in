@@ -17,21 +17,25 @@ import {
   BookOpen,
   BarChart3,
   RefreshCw,
+  XCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { STALLS } from "@/data/menu"
-import { OfflineBanner, SkipLink, StaffTools, useNewItemAlert } from "@/components/dashboard/StaffA11y"
+import { announce, OfflineBanner, SkipLink, StaffTools, useNewItemAlert } from "@/components/dashboard/StaffA11y"
 import { useStallGuard } from "@/lib/use-stall-guard"
 import { useStallAuthStore } from "@/stores/stall-auth"
-import { updateChildOrderStatus, type OrderStatus, type ParentOrder, type ChildStallOrder } from "@/lib/orders-db"
+import { rejectChildOrder, updateChildOrderStatus, type OrderStatus, type ParentOrder, type ChildStallOrder } from "@/lib/orders-db"
 
 const STATUS_TABS: { key: OrderStatus; label: string; icon: typeof ClipboardList }[] = [
-  { key: "ORDER_RECEIVED", label: "New Received", icon: Bell },
-  { key: "PREPARING", label: "Preparing", icon: ChefHat },
+  { key: "ORDER_RECEIVED", label: "New", icon: Bell },
+  { key: "PREPARING", label: "Cooking", icon: ChefHat },
   { key: "READY", label: "Ready", icon: Package },
-  { key: "DELIVERED", label: "Delivered", icon: CheckCircle2 },
+  { key: "DELIVERED", label: "Served", icon: CheckCircle2 },
+  { key: "CANCELLED", label: "Cancelled", icon: XCircle },
 ]
+
+const REJECT_REASONS = ["Item is finished", "Kitchen is too busy", "Stall is closing", "Other reason"]
 
 export default function StallOwnerDashboard() {
   const { ready, session } = useStallGuard()
@@ -39,6 +43,8 @@ export default function StallOwnerDashboard() {
   const selectedStallId = session?.stallId ?? ""
   const [activeTab, setActiveTab] = useState<OrderStatus>("ORDER_RECEIVED")
   const [allParentOrders, setAllParentOrders] = useState<ParentOrder[]>([])
+  const [rejecting, setRejecting] = useState<string | null>(null)
+  const [reason, setReason] = useState(REJECT_REASONS[0])
 
   const currentStall = STALLS.find((s) => s.id === selectedStallId) || STALLS[5]
 
@@ -84,6 +90,14 @@ export default function StallOwnerDashboard() {
 
   const handleUpdateStatus = (parentOrderId: string, childOrderId: string, newStatus: OrderStatus) => {
     updateChildOrderStatus(parentOrderId, childOrderId, newStatus)
+    announce(newStatus === "PREPARING" ? "Order accepted. The customer has been told." : newStatus === "READY" ? "Marked cooked. The customer and waiter have been told." : "Marked served.")
+    loadOrders()
+  }
+
+  const handleReject = (parentOrderId: string, childOrderId: string) => {
+    rejectChildOrder(parentOrderId, childOrderId, reason)
+    announce("Order declined. The customer has been told why.")
+    setRejecting(null)
     loadOrders()
   }
 
@@ -265,11 +279,34 @@ export default function StallOwnerDashboard() {
                     onClick={() => handleUpdateStatus(parent.id, child.id, nextStatus)}
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
-                    {nextStatus === "PREPARING" && "Start Preparing Order"}
-                    {nextStatus === "READY" && "Mark Order as Ready"}
-                    {nextStatus === "DELIVERED" && "Mark as Delivered to Table"}
+                    {nextStatus === "PREPARING" && "Accept order and start cooking"}
+                    {nextStatus === "READY" && "Cooked: tell customer and waiter"}
+                    {nextStatus === "DELIVERED" && "Mark as served at table"}
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
+                )}
+                {child.status === "ORDER_RECEIVED" && (
+                  rejecting === child.id ? (
+                    <div role="group" aria-label="Decline this order" className="rounded-xl border border-border bg-[#FFF9F2] p-3">
+                      <label htmlFor={`why-${child.id}`} className="mb-1 block text-sm font-semibold">Why can&apos;t you make it? The customer will see this.</label>
+                      <select id={`why-${child.id}`} value={reason} onChange={(e) => setReason(e.target.value)} className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm font-semibold">
+                        {REJECT_REASONS.map((x) => <option key={x}>{x}</option>)}
+                      </select>
+                      <div className="mt-3 flex gap-2">
+                        <button type="button" autoFocus onClick={() => setRejecting(null)} className="min-h-12 flex-1 rounded-xl border border-border bg-white text-sm font-bold">Keep order</button>
+                        <button type="button" onClick={() => handleReject(parent.id, child.id)} className="min-h-12 flex-1 rounded-xl bg-[#B3261E] text-sm font-bold text-white">Decline #{child.id}</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button type="button" onClick={() => { setRejecting(child.id); setReason(REJECT_REASONS[0]) }} className="min-h-11 w-full rounded-xl border border-[#B3261E] text-sm font-bold text-[#B3261E]">
+                      Can&apos;t make this order
+                    </button>
+                  )
+                )}
+                {child.status === "CANCELLED" && (
+                  <p className="rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm font-semibold text-[#B3261E]">
+                    {child.cancelled_by === "CUSTOMER" ? "Cancelled by the customer" : `Declined: ${child.cancel_reason}`}
+                  </p>
                 )}
                 {child.status === "DELIVERED" && (
                   <Badge variant="success" className="w-full justify-center py-2 text-xs font-bold">

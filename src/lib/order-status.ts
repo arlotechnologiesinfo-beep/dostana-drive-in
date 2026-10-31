@@ -1,6 +1,6 @@
 import type { OrderStatus, ParentOrder } from "@/lib/orders-db"
 
-export const TRACK_STEPS = ["Order Confirmed", "Preparing at Stall", "Out for Serving", "Served at Table"] as const
+export const TRACK_STEPS = ["Order sent to stall", "Cooking at the stall", "Cooked, on its way", "Served at table"] as const
 
 const STEP_INDEX: Record<OrderStatus, number> = {
   ORDER_RECEIVED: 0,

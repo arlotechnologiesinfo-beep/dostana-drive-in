@@ -28,6 +28,7 @@ import { useCatalog } from "@/lib/use-catalog"
 import { useBrowseStore } from "@/stores/browse"
 import { getOrCreateSession, isValidTable } from "@/lib/orders-db"
 import { useMounted } from "@/lib/use-mounted"
+import { useOrderEvents } from "@/lib/use-order-events"
 import { useCartStore } from "@/stores/cart"
 import { useRecentTablesStore } from "@/stores/recent-tables"
 import { DEMO_NOTIFICATIONS, useNotificationsStore } from "@/stores/notifications"
@@ -50,6 +51,7 @@ export default function TablePage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity)
   const setTableId = useCartStore((s) => s.setTableId)
   const readIds = useNotificationsStore((s) => s.readIds)
+  const { events: orderEvents } = useOrderEvents(tableId)
   const rememberTable = useRecentTablesStore((s) => s.remember)
 
   const [query, setQuery] = useState("")
@@ -131,7 +133,7 @@ export default function TablePage() {
     )
   }
 
-  const hasUnread = mounted && DEMO_NOTIFICATIONS.some((n) => !readIds.includes(n.id))
+  const hasUnread = mounted && (DEMO_NOTIFICATIONS.some((n) => !readIds.includes(n.id)) || orderEvents.some((e) => !readIds.includes(e.id)))
 
   return (
     <MotionConfig reducedMotion="user">

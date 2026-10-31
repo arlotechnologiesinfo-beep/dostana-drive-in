@@ -8,7 +8,7 @@ export interface AppNotification {
   demo?: true
 }
 
-/** Sample notifications until order and offer events are wired to the server. */
+/** Sample notifications; real order updates come from the order events feed. */
 export const DEMO_NOTIFICATIONS: AppNotification[] = [
   {
     id: "demo-welcome",
@@ -26,14 +26,14 @@ export const DEMO_NOTIFICATIONS: AppNotification[] = [
 
 interface NotificationsState {
   readIds: string[]
-  markAllRead: () => void
+  markRead: (ids: string[]) => void
 }
 
 export const useNotificationsStore = create<NotificationsState>()(
   persist(
     (set) => ({
       readIds: [],
-      markAllRead: () => set({ readIds: DEMO_NOTIFICATIONS.map((n) => n.id) }),
+      markRead: (ids) => set((s) => ({ readIds: Array.from(new Set([...s.readIds, ...ids])).slice(-400) })),
     }),
     { name: "dostana-notifications" }
   )

@@ -38,9 +38,28 @@ export interface ChildStallOrder {
   }[]
   total_amount: number
   status: OrderStatus
+  /** set when status is CANCELLED */
+  cancelled_by?: "CUSTOMER" | "STALL"
+  cancel_reason?: string
   created_at: string
   updated_at: string
 }
+
+export type OrderEventKind = "PLACED" | "ACCEPTED" | "READY" | "SERVED" | "CANCELLED_BY_CUSTOMER" | "CANCELLED_BY_STALL"
+
+/** A message for the customer's notification feed, written whenever an order moves. */
+export interface OrderEvent {
+  id: string
+  table_id: string
+  parent_order_id: string
+  kind: OrderEventKind
+  title: string
+  body: string
+  created_at: string
+}
+
+/** How long a customer may cancel on their own after placing an order. */
+export const CANCEL_WINDOW_SECONDS = 120
 
 export interface ParentOrder {
   id: string // e.g. DOSTANA-1024
@@ -71,6 +90,8 @@ export interface WaiterRequest {
     | "EXTRA_PLATES"
     | "NEED_ASSISTANCE"
     | "NEED_CLEANING"
+  /** optional detail from the customer, e.g. which order they need help with */
+  note?: string
   status: "PENDING" | "ACKNOWLEDGED" | "RESOLVED"
   created_at: string
 }
@@ -110,6 +131,8 @@ function setStorageData<T>(key: string, value: T) {
   if (typeof window === "undefined") return
   try {
     localStorage.setItem(key, JSON.stringify(value))
+    // other tabs get this natively; tell screens in this tab to refresh too
+    window.dispatchEvent(new Event("storage"))
   } catch (e) {
     console.error("Failed to save to localStorage:", e)
   }
@@ -306,6 +329,10 @@ export function createTransactionalOrder(payload: CreateOrderPayload): {
   existingOrders.unshift(parentOrder)
   setStorageData("dostana_orders", existingOrders)
 
+  for (const child of childOrders) {
+    pushEvent(parentOrder, "PLACED", `Order sent to ${child.stall_name}`, `${itemSummary(child)}. Waiting for the stall to accept it. You can cancel for 2 minutes.`)
+  }
+
   return { success: true, parent_order: parentOrder }
 }
 
@@ -318,32 +345,151 @@ export function getOrdersForTable(tableId: string): ParentOrder[] {
   return orders.filter((o) => o.table_id === normalized)
 }
 
+function itemSummary(child: ChildStallOrder): string {
+  return child.items.map((i) => `${i.name} × ${i.quantity}`).join(", ")
+}
+
+function tableNo(order: ParentOrder): number {
+  return parseInt(order.table_id, 10)
+}
+
+export function getOrderEvents(tableId: string): OrderEvent[] {
+  const normalized = String(tableId).padStart(2, "0")
+  return getStorageData<OrderEvent[]>("dostana_order_events", []).filter((e) => e.table_id === normalized)
+}
+
+function pushEvent(order: ParentOrder, kind: OrderEventKind, title: string, body: string) {
+  const events = getStorageData<OrderEvent[]>("dostana_order_events", [])
+  events.unshift({
+    id: `EV-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    table_id: order.table_id,
+    parent_order_id: order.id,
+    kind,
+    title,
+    body,
+    created_at: new Date().toISOString(),
+  })
+  setStorageData("dostana_order_events", events.slice(0, 300))
+}
+
+/** Puts cancelled items back on the shelf for items that track stock. */
+function restoreStock(child: ChildStallOrder) {
+  for (const line of child.items) {
+    const current = getCatalogItem(line.menu_item_id)
+    if (!current || current.stock === null) continue
+    useMenuAdminStore.getState().patchItem(
+      current.id,
+      { stock: current.stock + line.quantity, ...(current.stock === 0 ? { available: true } : {}) },
+      "Order cancelled"
+    )
+  }
+}
+
+/** Applies a change to one stall's part of an order and returns the updated order, or null when nothing changed. */
+function mutateChild(parentOrderId: string, childOrderId: string, change: (child: ChildStallOrder) => ChildStallOrder | null): { order: ParentOrder; child: ChildStallOrder } | null {
+  const orders = getStorageData<ParentOrder[]>("dostana_orders", [])
+  let result: { order: ParentOrder; child: ChildStallOrder } | null = null
+  const now = new Date().toISOString()
+
+  const next = orders.map((order) => {
+    if (order.id !== parentOrderId && !order.child_orders.some((c) => c.id === childOrderId)) return order
+    const children = order.child_orders.map((child) => {
+      if (child.id !== childOrderId) return child
+      const changed = change(child)
+      return changed ? { ...changed, updated_at: now } : child
+    })
+    const updatedChild = children.find((c) => c.id === childOrderId)!
+    const original = order.child_orders.find((c) => c.id === childOrderId)
+    if (!original || updatedChild === original) return order
+    const updatedOrder = { ...order, child_orders: children, updated_at: now }
+    result = { order: updatedOrder, child: updatedChild }
+    return updatedOrder
+  })
+
+  if (result) setStorageData("dostana_orders", next)
+  return result
+}
+
 export function updateChildOrderStatus(
   parentOrderId: string,
   childOrderId: string,
   newStatus: OrderStatus
 ): boolean {
-  const orders = getStorageData<ParentOrder[]>("dostana_orders", [])
-  let updated = false
+  if (newStatus === "CANCELLED") return rejectChildOrder(parentOrderId, childOrderId, "The stall could not make this order.")
 
-  const newOrders = orders.map((order) => {
-    if (order.id === parentOrderId || order.child_orders.some((c) => c.id === childOrderId)) {
-      const updatedChildOrders = order.child_orders.map((child) => {
-        if (child.id === childOrderId) {
-          updated = true
-          return { ...child, status: newStatus, updated_at: new Date().toISOString() }
-        }
-        return child
-      })
-      return { ...order, child_orders: updatedChildOrders, updated_at: new Date().toISOString() }
-    }
-    return order
-  })
+  const changed = mutateChild(parentOrderId, childOrderId, (child) =>
+    child.status === "CANCELLED" || child.status === "DELIVERED" || child.status === newStatus ? null : { ...child, status: newStatus }
+  )
+  if (!changed) return false
 
-  if (updated) {
-    setStorageData("dostana_orders", newOrders)
+  const { order, child } = changed
+  if (newStatus === "PREPARING") {
+    pushEvent(order, "ACCEPTED", `${child.stall_name} accepted your order`, `${itemSummary(child)} is being cooked now.`)
+  } else if (newStatus === "READY") {
+    pushEvent(order, "READY", "Your order is cooked and ready", `${child.stall_name} finished ${itemSummary(child)}. A waiter is bringing it to Table ${tableNo(order)}.`)
+  } else if (newStatus === "DELIVERED") {
+    pushEvent(order, "SERVED", `Served at Table ${tableNo(order)}`, `${itemSummary(child)} from ${child.stall_name}. Enjoy your meal!`)
   }
-  return updated
+  return true
+}
+
+/** A stall declines or cannot finish its part of an order. The customer is told why. */
+export function rejectChildOrder(parentOrderId: string, childOrderId: string, reason: string): boolean {
+  const changed = mutateChild(parentOrderId, childOrderId, (child) =>
+    child.status === "ORDER_RECEIVED" || child.status === "PREPARING"
+      ? { ...child, status: "CANCELLED", cancelled_by: "STALL", cancel_reason: reason }
+      : null
+  )
+  if (!changed) return false
+  restoreStock(changed.child)
+  const paid = changed.order.payment_status === "PAID" ? " Please ask a waiter about your payment." : ""
+  pushEvent(changed.order, "CANCELLED_BY_STALL", `${changed.child.stall_name} couldn't make your order`, `${itemSummary(changed.child)}. Reason: ${reason}${paid}`)
+  return true
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CUSTOMER CANCELLATION (2-MINUTE WINDOW)
+───────────────────────────────────────────────────────────── */
+export type CancelState =
+  | { state: "open"; secondsLeft: number }
+  | { state: "closed"; reason: "TIME" | "ACCEPTED" | "CANCELLED" }
+
+/** Customers can cancel for 2 minutes, and only while no stall has accepted its part. */
+export function getCancelState(order: ParentOrder, now: number = Date.now()): CancelState {
+  const live = order.child_orders.filter((c) => c.status !== "CANCELLED")
+  if (live.length === 0) return { state: "closed", reason: "CANCELLED" }
+  if (live.some((c) => c.status !== "ORDER_RECEIVED")) return { state: "closed", reason: "ACCEPTED" }
+  const elapsed = (now - new Date(order.created_at).getTime()) / 1000
+  if (elapsed >= CANCEL_WINDOW_SECONDS) return { state: "closed", reason: "TIME" }
+  return { state: "open", secondsLeft: Math.ceil(CANCEL_WINDOW_SECONDS - elapsed) }
+}
+
+export function cancelOrderByCustomer(tableId: string, parentOrderId: string): { success: boolean; error?: string } {
+  const normalized = String(tableId).padStart(2, "0")
+  const orders = getStorageData<ParentOrder[]>("dostana_orders", [])
+  const order = orders.find((o) => o.id === parentOrderId && o.table_id === normalized)
+  if (!order) return { success: false, error: "We couldn't find that order." }
+
+  // Re-check the rules here so a stale screen can't cancel food a stall already started.
+  const state = getCancelState(order)
+  if (state.state !== "open") {
+    return { success: false, error: "This order can no longer be cancelled here. Please contact the stall." }
+  }
+
+  const now = new Date().toISOString()
+  const live = order.child_orders.filter((c) => c.status !== "CANCELLED")
+  const updated: ParentOrder = {
+    ...order,
+    child_orders: order.child_orders.map((c) =>
+      c.status === "CANCELLED" ? c : { ...c, status: "CANCELLED", cancelled_by: "CUSTOMER", cancel_reason: "Cancelled by you", updated_at: now }
+    ),
+    updated_at: now,
+  }
+  setStorageData("dostana_orders", orders.map((o) => (o.id === order.id ? updated : o)))
+  live.forEach(restoreStock)
+  const paid = order.payment_status === "PAID" ? " Ask a waiter about your payment." : " Nothing to pay."
+  pushEvent(updated, "CANCELLED_BY_CUSTOMER", `Order #${order.id.replace("DOSTANA-", "")} cancelled`, `You cancelled before the stalls started.${paid}`)
+  return { success: true }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -351,7 +497,8 @@ export function updateChildOrderStatus(
 ───────────────────────────────────────────────────────────── */
 export function createWaiterRequest(
   tableId: string,
-  requestType: WaiterRequest["request_type"]
+  requestType: WaiterRequest["request_type"],
+  note?: string
 ): { success: boolean; request?: WaiterRequest; cooldown_seconds?: number; error?: string } {
   if (!isValidTable(tableId)) {
     return { success: false, error: "Invalid table number." }
@@ -381,6 +528,7 @@ export function createWaiterRequest(
     table_id: normalized,
     session_id: session.session_id,
     request_type: requestType,
+    ...(note ? { note } : {}),
     status: "PENDING",
     created_at: new Date().toISOString(),
   }

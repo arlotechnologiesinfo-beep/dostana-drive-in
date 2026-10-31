@@ -143,7 +143,8 @@ export default function WaiterPage() {
                 </span>
                 <span className="min-w-0 flex-1 basis-48">
                   <span className="block text-lg font-bold text-[#26160F]">Table {parseInt(r.table_id, 10)} · {REQUEST_LABEL[r.request_type]}</span>
-                  <span className="block text-xs text-[#A39B95]">
+                  {r.note && <span className="block text-sm text-[#302019]">{r.note}</span>}
+                  <span className="block text-xs text-[#77716D]">
                     {r.status === "PENDING" ? "New" : "Acknowledged"} at {time(r.created_at)}
                   </span>
                 </span>

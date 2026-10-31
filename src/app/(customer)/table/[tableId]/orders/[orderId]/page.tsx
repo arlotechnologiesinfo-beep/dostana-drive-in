@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Check } from "lucide-react"
+import { CancelOrderPanel } from "@/components/customer/CancelOrderPanel"
 import { SubPage } from "@/components/customer/SubPage"
 import { overallStep, statusLabel, TRACK_STEPS } from "@/lib/order-status"
 import { useOrders } from "@/lib/use-orders"
@@ -39,7 +40,7 @@ export default function OrderTrackingPage() {
         <section aria-label="Order progress" className="rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
           <p className="mb-4 text-sm text-[#77716D]">Table {parseInt(order.table_id, 10)}</p>
           {step < 0 ? (
-            <p className="rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm text-[#EF493B]">This order was cancelled. Ask a waiter if you need help.</p>
+            <p className="rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm font-medium text-[#B3261E]">This order was cancelled. Ask a waiter if you need help.</p>
           ) : (
             <ol className="space-y-0">
               {TRACK_STEPS.map((label, i) => {
@@ -78,7 +79,7 @@ export default function OrderTrackingPage() {
             <section key={c.id} aria-label={c.stall_name} className="rounded-[22px] bg-white p-4 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h2 className="truncate text-base font-bold text-[#26160F]">{c.stall_name}</h2>
-                <span className="shrink-0 rounded-full bg-[#FFE7D6] px-3 py-1 text-xs font-semibold text-[#E85D16]">{statusLabel(c.status)}</span>
+                <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${c.status === "CANCELLED" ? "bg-[#FCE8E7] text-[#B3261E]" : c.status === "DELIVERED" || c.status === "READY" ? "bg-[#EAF6E5] text-[#145A25]" : "bg-[#FFE7D6] text-[#7A2E05]"}`}>{c.status === "ORDER_RECEIVED" ? "Waiting for stall" : c.status === "PREPARING" ? "Being cooked" : statusLabel(c.status)}</span>
               </div>
               <ul className="space-y-1 text-sm text-[#302019]">
                 {c.items.map((i) => (
@@ -88,8 +89,11 @@ export default function OrderTrackingPage() {
                   </li>
                 ))}
               </ul>
+              {c.status === "CANCELLED" && <p className="mt-2 rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm text-[#B3261E]">{c.cancelled_by === "STALL" ? `${c.stall_name} couldn't make this. Reason: ${c.cancel_reason}` : "You cancelled this part of the order."}</p>}
             </section>
           ))}
+
+          <CancelOrderPanel tableId={tableId} order={order} />
 
           <section aria-label="Bill" className="rounded-[22px] bg-white p-5 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
             <dl className="space-y-2 text-sm">
