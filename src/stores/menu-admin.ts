@@ -19,6 +19,11 @@ export interface StaffItem {
   available: boolean
   /** units left; null means unlimited */
   stock: number | null
+  /** portions per order */
+  serves?: number
+  /** minutes to prepare */
+  prepMinutes?: number
+  allergens?: string[]
   custom: boolean
   removed?: boolean
   updatedAt: string

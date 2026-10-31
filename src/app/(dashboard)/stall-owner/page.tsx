@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { STALLS } from "@/data/menu"
+import { OfflineBanner, SkipLink, StaffTools, useNewItemAlert } from "@/components/dashboard/StaffA11y"
 import { useStallGuard } from "@/lib/use-stall-guard"
 import { useStallAuthStore } from "@/stores/stall-auth"
 import { updateChildOrderStatus, type OrderStatus, type ParentOrder, type ChildStallOrder } from "@/lib/orders-db"
@@ -71,6 +72,11 @@ export default function StallOwnerDashboard() {
 
   const filteredOrders = stallChildOrders.filter((o) => o.child.status === activeTab)
 
+  useNewItemAlert(
+    stallChildOrders.filter((o) => o.child.status === "ORDER_RECEIVED").map((o) => ({ id: o.child.id, label: `new order from Table ${parseInt(o.parent.table_id, 10)}` })),
+    ready
+  )
+
   const orderCounts = STATUS_TABS.reduce((acc, tab) => {
     acc[tab.key] = stallChildOrders.filter((o) => o.child.status === tab.key).length
     return acc
@@ -108,6 +114,8 @@ export default function StallOwnerDashboard() {
 
   return (
     <div className="min-h-screen bg-background pb-12">
+      <SkipLink />
+      <OfflineBanner />
       {/* Header */}
       <div className="border-b border-border px-4 py-4 sticky top-0 z-40 bg-background/95">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -120,6 +128,7 @@ export default function StallOwnerDashboard() {
           </div>
 
           <div className="flex items-center gap-2">
+            <StaffTools />
             <button
               onClick={loadOrders}
               aria-label="Refresh orders" className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface border border-border text-muted-foreground hover:text-foreground"
@@ -162,7 +171,7 @@ export default function StallOwnerDashboard() {
           <div className="font-black text-foreground text-lg" style={{ fontFamily: "var(--font-heading)" }}>
             {currentStall.name.split(" ")[0]}
           </div>
-          <div className="text-[10px] text-gold uppercase font-bold tracking-wider">Stall Operational</div>
+          <div className="text-xs text-[#7A5A10] uppercase font-bold tracking-wider">Stall Operational</div>
         </div>
       </div>
 
@@ -196,7 +205,7 @@ export default function StallOwnerDashboard() {
       </div>
 
       {/* Orders List */}
-      <div className="max-w-7xl mx-auto px-4 space-y-3">
+      <main id="main" tabIndex={-1} aria-label="Orders" className="max-w-7xl mx-auto px-4 space-y-3 outline-none">
         {filteredOrders.length === 0 ? (
           <div className="text-center py-16 bg-white shadow-[0_6px_24px_rgba(48,32,25,0.07)] rounded-3xl border border-border">
             <ChefHat className="mx-auto mb-2 h-10 w-10 text-primary" aria-hidden="true" />
@@ -216,10 +225,10 @@ export default function StallOwnerDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm font-black text-gold">
+                      <span className="font-mono text-base font-black text-[#7A5A10]">
                         #{child.id}
                       </span>
-                      <Badge variant="secondary" className="bg-primary/20 text-white font-bold">
+                      <Badge variant="secondary" className="bg-[#FFE7D6] text-[#7A2E05] text-sm font-bold">
                         Table {parent.table_id}
                       </Badge>
                     </div>
@@ -240,11 +249,11 @@ export default function StallOwnerDashboard() {
                 {/* Items */}
                 <div className="space-y-1 bg-surface/60 p-3 rounded-xl border border-border">
                   {child.items.map((item, j) => (
-                    <div key={j} className="flex items-start justify-between text-xs">
+                    <div key={j} className="flex items-start justify-between text-base">
                       <span className="text-foreground font-semibold">
                         {item.name} × {item.quantity}
                       </span>
-                      <span className="text-gold font-bold">₹{item.unit_price * item.quantity}</span>
+                      <span className="font-bold text-[#7A5A10]">₹{item.unit_price * item.quantity}</span>
                     </div>
                   ))}
                 </div>
@@ -252,7 +261,7 @@ export default function StallOwnerDashboard() {
                 {/* Action button */}
                 {nextStatus && (
                   <Button
-                    className="w-full h-11 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl glow-red"
+                    className="w-full h-[52px] bg-[#C2410C] hover:bg-[#9A3412] text-white text-base font-bold rounded-xl"
                     onClick={() => handleUpdateStatus(parent.id, child.id, nextStatus)}
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
@@ -272,7 +281,7 @@ export default function StallOwnerDashboard() {
             )
           })
         )}
-      </div>
+      </main>
     </div>
   )
 }

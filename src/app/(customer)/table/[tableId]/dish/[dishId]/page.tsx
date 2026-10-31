@@ -103,7 +103,10 @@ export default function DishDetailPage() {
           </div>
 
           {item.description && <p className="mt-3 text-sm leading-6 text-[#77716D]">{item.description}</p>}
-          <p className="mt-1 text-xs text-[#A39B95]">{item.veg ? "Vegetarian" : "Non-vegetarian"} · demo rating</p>
+          <p className="mt-1 text-xs text-[#A39B95]">{item.veg ? "Vegetarian" : "Non-vegetarian"} · serves {item.serves}{item.prepMinutes ? ` · about ${item.prepMinutes} min` : ""} · demo rating</p>
+          {item.allergens.length > 0 && (
+            <p className="mt-2 rounded-xl bg-[#FFF1D0] px-3 py-2 text-sm font-medium text-[#7A5A10]">Contains: {item.allergens.join(", ")}</p>
+          )}
 
           {item.variants && item.variants.length > 0 && (
             <fieldset className="mt-6">

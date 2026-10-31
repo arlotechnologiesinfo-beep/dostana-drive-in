@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useMounted } from "@/lib/use-mounted"
+import { OfflineBanner, SkipLink, StaffTools } from "@/components/dashboard/StaffA11y"
 import { useAdminAuthStore } from "@/stores/admin-auth"
 import { motion, AnimatePresence } from "framer-motion"
 import {
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { icon: LayoutDashboard, label: "Overview",  href: "/admin" },
   { icon: ClipboardList,   label: "Orders",    href: "/admin/orders" },
   { icon: Store,           label: "Stalls",    href: "/admin/stalls" },
+  { icon: UtensilsCrossed, label: "Menus",     href: "/admin/menu" },
   { icon: Table2,          label: "Tables",    href: "/admin/tables" },
   { icon: Tag,             label: "Coupons",   href: "/admin/coupons" },
   { icon: Settings,        label: "Settings",  href: "/admin/settings" },
@@ -68,6 +70,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <SkipLink />
       {/* ─── Desktop Sidebar ─────────────────────────── */}
       <aside className="w-64 border-r border-border bg-white hidden lg:flex flex-col shrink-0">
         {/* Logo */}
@@ -202,6 +205,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
 
       {/* ─── Main Content Area ───────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-auto">
+        <OfflineBanner />
         {/* Top Bar */}
         <div className="border-b border-border px-4 lg:px-6 py-4 flex items-center justify-between sticky top-0 z-30 bg-background">
           <div className="flex items-center gap-3">
@@ -225,6 +229,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <StaffTools />
             <button aria-label="Notifications" className="w-11 h-11 rounded-xl bg-surface border border-border flex items-center justify-center relative">
               <Bell className="w-4 h-4 text-muted-foreground" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary" />
@@ -242,7 +247,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
         </div>
 
         {/* Page Content */}
-        <div className="flex-1">{children}</div>
+        <main id="main" tabIndex={-1} className="flex-1 outline-none">{children}</main>
       </div>
     </div>
   )

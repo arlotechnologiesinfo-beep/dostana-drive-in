@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Bell, Check, ConciergeBell } from "lucide-react"
+import { useNewItemAlert } from "@/components/dashboard/StaffA11y"
 import { AdminLayout } from "@/components/dashboard/AdminLayout"
 import {
   getWaiterRequests,
@@ -75,6 +76,14 @@ export default function WaiterPage() {
     .sort((a, b) => a.at.localeCompare(b.at))
 
   const open = requests.filter((r) => r.status !== "RESOLVED").sort((a, b) => a.created_at.localeCompare(b.created_at))
+
+  useNewItemAlert(
+    [
+      ...serve.map((t) => ({ id: t.key, label: `Table ${parseInt(t.table, 10)} order ready to serve` })),
+      ...open.filter((r) => r.status === "PENDING").map((r) => ({ id: r.id, label: `Table ${parseInt(r.table_id, 10)}: ${REQUEST_LABEL[r.request_type]}` })),
+    ],
+    true
+  )
 
   const markServed = (t: ServeTask) => {
     updateChildOrderStatus(t.parentId, t.childId, "DELIVERED")

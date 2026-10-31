@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { BarChart3, BookOpen, ChefHat, LogOut } from "lucide-react"
+import { OfflineBanner, SkipLink, StaffTools } from "@/components/dashboard/StaffA11y"
 import { useStallGuard } from "@/lib/use-stall-guard"
 import { useStallAuthStore } from "@/stores/stall-auth"
 
@@ -29,12 +30,16 @@ export function StallShell({ children }: { children: (stall: { id: string; name:
 
   return (
     <div className="min-h-screen bg-[#FFF9F2]">
+      <SkipLink />
+      <OfflineBanner />
       <header className="sticky top-0 z-30 border-b border-[#F1E7DE] bg-white">
         <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-3 px-4 py-3 md:px-8">
           <div className="min-w-0">
             <p className="text-xs text-[#77716D]">Stall manager</p>
             <p className="truncate text-base font-extrabold text-[#26160F] md:text-lg">{session.stallName}</p>
           </div>
+          <div className="flex items-center gap-2">
+          <StaffTools />
           <button
             type="button"
             onClick={() => {
@@ -45,6 +50,7 @@ export function StallShell({ children }: { children: (stall: { id: string; name:
           >
             <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
           </button>
+          </div>
         </div>
         <nav aria-label="Stall sections" className="mx-auto flex max-w-[1100px] gap-1 overflow-x-auto px-3 md:px-7">
           {TABS.map(({ href, label, icon: Icon }) => {
@@ -64,7 +70,7 @@ export function StallShell({ children }: { children: (stall: { id: string; name:
           })}
         </nav>
       </header>
-      {children({ id: session.stallId, name: session.stallName })}
+      <div id="main" tabIndex={-1} className="outline-none">{children({ id: session.stallId, name: session.stallName })}</div>
     </div>
   )
 }

@@ -1078,3 +1078,16 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 @media (min-width: 768px) {
   .dd-marquee { --card: var(--card-wide) !important; }
 }
+
+/* ─── Staff accessibility: high contrast ───────────── */
+html[data-staff-hc="true"] {
+  --foreground: #000000;
+  --muted-foreground: #2E241E;
+  --border: #6B5A4E;
+  --border-strong: #3E3128;
+  --background: #FFFFFF;
+}
+html[data-staff-hc="true"] body { color: #000; }
+html[data-staff-hc="true"] .text-gold,
+html[data-staff-hc="true"] [class*="text-[#7A5A10]"] { color: #5A3F00; }
+html[data-staff-hc="true"] :focus-visible { outline: 3px solid #000 !important; outline-offset: 3px !important; }
