@@ -100,7 +100,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
         <div className="p-4 border-t border-border space-y-2">
           <Link
             href="/"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-[#FFF4EA] transition-all"
+            className="w-full min-h-11 flex items-center gap-3 px-4 py-3 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-[#FFF4EA] transition-all"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             <Store className="w-4 h-4" />
@@ -108,7 +108,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
           </Link>
           <button
             onClick={() => router.push("/auth/login")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-[#FFF4EA] transition-all"
+            className="w-full min-h-11 flex items-center gap-3 px-4 py-3 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-[#FFF4EA] transition-all"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             <LogOut className="w-4 h-4" />
@@ -206,7 +206,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center relative">
+            <button aria-label="Notifications" className="w-11 h-11 rounded-xl bg-surface border border-border flex items-center justify-center relative">
               <Bell className="w-4 h-4 text-muted-foreground" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary" />
             </button>

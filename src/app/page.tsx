@@ -56,14 +56,14 @@ export default function LandingPage() {
       <ParallaxHero background={img("1504674900247-0877df9cc836", 1800)}>
 
         <nav aria-label="Primary" className="mx-auto flex max-w-[1100px] items-center justify-between px-5 py-4 md:px-8 md:py-6">
-          <Link href="/" className="text-lg font-extrabold tracking-tight text-white md:hidden">
+          <Link href="/" className="inline-flex min-h-11 min-w-11 items-center text-lg font-extrabold tracking-tight text-white md:hidden">
             DOSTANA
           </Link>
           <span className="hidden md:block" aria-hidden="true" />
           <ul className="flex items-center gap-1 text-sm font-medium text-white md:gap-6 md:text-base">
             {NAV_LINKS.map((l, i) => (
               <li key={l.href} className={i < 2 ? "hidden md:block" : ""}>
-                <Link href={l.href} className="inline-flex min-h-11 items-center px-2 hover:text-[#FFB84D]">
+                <Link href={l.href} className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 hover:text-[#FFB84D]">
                   {l.label}
                 </Link>
               </li>

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Bell, Droplets, Receipt, Utensils, Sparkles, HelpCircle, CheckCircle2, Clock } from "lucide-react"
+import { X, Bell, ConciergeBell, Droplets, Receipt, Utensils, Sparkles, HelpCircle, CheckCircle2, Clock } from "lucide-react"
 
 interface CallWaiterModalProps {
   tableId: string
@@ -65,7 +65,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-4">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -80,13 +80,13 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
           initial={{ y: "100%", opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "100%", opacity: 0 }}
-          className="relative w-full max-w-lg bg-surface border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 overflow-hidden z-10 space-y-4"
+          className="relative max-h-[92vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-3xl border border-[#F1E7DE] bg-white p-5 pb-[max(env(safe-area-inset-bottom),24px)] sm:rounded-3xl sm:pb-5 z-10"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border pb-3">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
-                <Bell className="w-5 h-5" />
+                <ConciergeBell className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-bold text-foreground text-base leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
@@ -97,7 +97,7 @@ export function CallWaiterModal({ tableId, isOpen, onClose }: CallWaiterModalPro
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground"
+              aria-label="Close" className="w-11 h-11 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
             </button>

@@ -122,7 +122,7 @@ export default function StallOwnerDashboard() {
           <div className="flex items-center gap-2">
             <button
               onClick={loadOrders}
-              className="p-2 rounded-xl bg-surface border border-border text-muted-foreground hover:text-foreground"
+              aria-label="Refresh orders" className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface border border-border text-muted-foreground hover:text-foreground"
             >
               <RefreshCw className="w-4 h-4" />
             </button>

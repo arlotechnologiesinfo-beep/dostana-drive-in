@@ -177,6 +177,7 @@ export default function TablePage() {
                 <CategoryRow categories={HOME_CATEGORIES} selectedId={categoryId} onSelect={setCategoryId} />
                 <StallCircles stalls={HOME_STALLS} tableId={tableId} />
                 <PromoCards tableId={tableId} />
+                <MegaTreatsBanner tableId={tableId} />
 
                 <section aria-labelledby="popular-stalls" className="space-y-1">
                   <div id="popular-stalls">
@@ -184,8 +185,6 @@ export default function TablePage() {
                   </div>
                   <PopularStalls stalls={stalls} tableId={tableId} />
                 </section>
-
-                <MegaTreatsBanner tableId={tableId} />
 
                 <section aria-labelledby="recommended" className="space-y-1">
                   <div id="recommended">

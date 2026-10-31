@@ -62,7 +62,7 @@ function SearchContent() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for stalls, dishes, cuisines..."
           aria-label="Search for stalls, dishes and cuisines"
-          className="min-w-0 flex-1 truncate bg-transparent text-sm text-[#302019] outline-none placeholder:text-[#A39B95] [&::-webkit-search-cancel-button]:hidden"
+          className="h-11 min-w-0 flex-1 truncate bg-transparent text-sm text-[#302019] outline-none placeholder:text-[#A39B95] [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="flex h-11 w-11 items-center justify-center rounded-full text-[#77716D]">

@@ -1,135 +1,64 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { Mail, Lock, ArrowRight, Loader2, ShieldCheck, Store } from "lucide-react"
+import { Eye, EyeOff, ShieldCheck } from "lucide-react"
 
+/** Admin sign in. Pattern 3, Form (auth card). Demo only: no real authentication yet. */
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [show, setShow] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
 
-  const handleLogin = async (role: "admin" | "stall_owner") => {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    setIsLoading(false)
-
-    if (role === "admin") {
-      router.push("/admin")
-    } else {
-      router.push("/stall-login")
-    }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) return setError("Enter a valid email address.")
+    if (!password) return setError("Enter your password.")
+    setError(null)
+    setBusy(true)
+    await new Promise((r) => setTimeout(r, 400))
+    setBusy(false)
+    router.push("/admin")
   }
 
+  const field = "h-12 w-full rounded-2xl border border-[#F1E7DE] bg-white px-4 text-sm outline-none placeholder:text-[#A39B95] focus:border-[#F4772B]"
+
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+    <main className="flex min-h-screen items-center justify-center bg-[#FFF9F2] px-5 py-10">
+      <form onSubmit={submit} noValidate className="w-full max-w-[420px] rounded-[28px] border border-[#F1E7DE] bg-white p-6 shadow-[0_6px_24px_rgba(48,32,25,0.06)] md:p-8">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#26160F]">
+          <ShieldCheck className="h-7 w-7 text-[#F5B544]" aria-hidden="true" />
+        </span>
+        <h1 className="mt-4 text-2xl font-extrabold text-[#26160F]">Admin sign in</h1>
+        <p className="mt-1 text-sm text-[#77716D]">Manage stalls, tables, orders and offers.</p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-sm relative z-10"
-      >
-        {/* Header Branding */}
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-4 glow-red">
-            <span className="text-foreground font-black text-xl" style={{ fontFamily: "var(--font-heading)" }}>D</span>
+        <div className="mt-6 space-y-4">
+          <div>
+            <label htmlFor="admin-email" className="mb-1 block text-sm font-semibold text-[#26160F]">Email</label>
+            <input id="admin-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@company.com" className={field} aria-invalid={error ? true : undefined} />
           </div>
-          <h1
-            className="text-2xl font-black text-foreground tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            DOSTANA DRIVE IN
-          </h1>
-          <p className="text-muted-foreground text-xs mt-1">
-            Owner & Admin Portal
-          </p>
-        </div>
-
-        {/* Login Box */}
-        <div className="bg-white shadow-[0_6px_24px_rgba(48,32,25,0.07)] rounded-3xl p-6 border border-border space-y-4">
-          <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              placeholder="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field pl-11 text-sm h-12"
-              style={{ fontFamily: "var(--font-body)" }}
-            />
+          <div>
+            <label htmlFor="admin-pw" className="mb-1 block text-sm font-semibold text-[#26160F]">Password</label>
+            <div className="relative">
+              <input id="admin-pw" type={show ? "text" : "password"} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className={`${field} pr-12`} />
+              <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[#77716D]">
+                {show ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+              </button>
+            </div>
           </div>
-          <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field pl-11 text-sm h-12"
-              style={{ fontFamily: "var(--font-body)" }}
-            />
-          </div>
-
-          <button
-            onClick={() => handleLogin("admin")}
-            disabled={isLoading}
-            className="w-full h-12 rounded-2xl bg-primary glow-red text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary-dark transition-all"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <>
-                <span>Sign In to Portal</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+          {error && <p role="alert" className="rounded-xl bg-[#FCE8E7] px-3 py-2 text-sm text-[#EF493B]">{error}</p>}
+          <button type="submit" disabled={busy} className="h-[52px] w-full rounded-full bg-[#F4772B] text-[15px] font-semibold text-white transition-colors hover:bg-[#E85D16] disabled:opacity-60">
+            {busy ? "Signing in…" : "Sign in"}
           </button>
         </div>
 
-        {/* Quick Demo Access */}
-        <div className="mt-8 text-center">
-          <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-medium">
-            Direct Demo Dashboard Access
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => handleLogin("admin")}
-              disabled={isLoading}
-              className="bg-white shadow-[0_6px_24px_rgba(48,32,25,0.07)] rounded-2xl p-3.5 border border-border hover:border-border flex items-center justify-center gap-2 text-foreground font-semibold text-xs transition-colors"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              <ShieldCheck className="w-4 h-4 text-primary" />
-              <span>Admin Panel</span>
-            </button>
-            <button
-              onClick={() => handleLogin("stall_owner")}
-              disabled={isLoading}
-              className="bg-white shadow-[0_6px_24px_rgba(48,32,25,0.07)] rounded-2xl p-3.5 border border-border hover:border-border flex items-center justify-center gap-2 text-foreground font-semibold text-xs transition-colors"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              <Store className="w-4 h-4 text-gold" />
-              <span>Stall Owner</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Register Link */}
-        <p className="mt-8 text-center text-xs text-muted-foreground">
-          New stall owner?{" "}
-          <a
-            href="/auth/register"
-            className="text-primary font-semibold hover:underline"
-          >
-            Register your stall
-          </a>
-        </p>
-      </motion.div>
-    </div>
+        <p className="mt-5 text-xs leading-5 text-[#A39B95]">Demo sign-in: any valid email and password opens the admin screens until real authentication is connected.</p>
+        <Link href="/stall-login" className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-[#E85D16]">Stall manager sign in</Link>
+      </form>
+    </main>
   )
 }

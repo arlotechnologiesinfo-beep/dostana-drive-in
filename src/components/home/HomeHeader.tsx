@@ -54,7 +54,7 @@ export function HomeHeader({ tableId, tableNumber, greeting, hasUnread, onCallWa
                 className="absolute left-0 top-full z-40 mt-2 w-64 rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(48,32,25,0.08)]"
               >
                 <p className="text-sm font-semibold text-[#26160F]">Table {tableNumber}</p>
-                <p className="mt-0.5 text-xs text-[#77716D]">Your table session is active. Orders go to this table.</p>
+                <p className="mt-1 text-xs text-[#77716D]">Your table session is active. Orders go to this table.</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -64,9 +64,10 @@ export function HomeHeader({ tableId, tableNumber, greeting, hasUnread, onCallWa
                   className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#F4772B] text-sm font-semibold text-white transition-colors hover:bg-[#E85D16]"
                 >
                   <Bell className="h-4 w-4" aria-hidden="true" />
-                  Call waiter
+                  Assistance
                 </button>
-                <p className="mt-3 text-xs text-[#A39B95]">Wrong table? Scan the QR code on your table or ask a waiter.</p>
+                <Link href={`/table/${tableId}/switch`} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#F4772B] text-sm font-semibold text-[#E85D16]">Change table</Link>
+                <Link href={`/table/${tableId}/more`} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#FFF4EA] text-sm font-semibold text-[#26160F]">More options</Link>
               </div>
             </>
           )}

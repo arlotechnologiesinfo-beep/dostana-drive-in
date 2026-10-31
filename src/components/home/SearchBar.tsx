@@ -23,7 +23,7 @@ export function SearchBar({ value, onChange, onOpenFilters, activeFilters }: Sea
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search for stalls, dishes, cuisines..."
         aria-label="Search for stalls, dishes and cuisines"
-        className="min-w-0 flex-1 truncate bg-transparent text-sm text-[#302019] outline-none placeholder:text-[#A39B95] [&::-webkit-search-cancel-button]:hidden"
+        className="h-11 min-w-0 flex-1 truncate bg-transparent text-sm text-[#302019] outline-none placeholder:text-[#A39B95] [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
         <button

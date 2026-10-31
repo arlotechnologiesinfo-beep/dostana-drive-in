@@ -22,7 +22,7 @@ export function QtyStepper({ value, onChange, label, size = "sm", max = 20 }: Qt
         type="button"
         onClick={() => onChange(value - 1)}
         aria-label={`Remove one ${label}`}
-        className="flex h-11 w-9 items-center justify-center"
+        className="flex h-11 w-11 items-center justify-center"
       >
         <Minus className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -33,7 +33,7 @@ export function QtyStepper({ value, onChange, label, size = "sm", max = 20 }: Qt
         type="button"
         onClick={() => onChange(Math.min(max, value + 1))}
         aria-label={`Add one more ${label}`}
-        className="flex h-11 w-9 items-center justify-center"
+        className="flex h-11 w-11 items-center justify-center"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
       </button>
