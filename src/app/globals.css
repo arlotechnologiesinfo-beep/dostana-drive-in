@@ -1067,3 +1067,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .stall-card:active {
   transform: scale(0.98);
 }
+
+/* ─── Slow looping dish row ─────────────────────── */
+@keyframes dd-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.dd-marquee-track { animation: dd-marquee var(--dur, 70s) linear infinite; will-change: transform; }
+.dd-marquee { --card-px: var(--card); }
+@media (min-width: 768px) {
+  .dd-marquee { --card: var(--card-wide) !important; }
+}

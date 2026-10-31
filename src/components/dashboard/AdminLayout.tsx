@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useMounted } from "@/lib/use-mounted"
+import { useAdminAuthStore } from "@/stores/admin-auth"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   LayoutDashboard,
@@ -48,7 +49,22 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const mounted = useMounted()
+  const session = useAdminAuthStore((s) => s.session)
+  const logout = useAdminAuthStore((s) => s.logout)
+
+  useEffect(() => {
+    if (mounted && !session) router.replace("/auth/login")
+  }, [mounted, session, router])
+
   const now = mounted ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""
+
+  if (!mounted || !session) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background">
+        <p role="status" className="text-sm text-muted-foreground">Checking your sign-in…</p>
+      </main>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -107,7 +123,10 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
             View Customer Site
           </Link>
           <button
-            onClick={() => router.push("/auth/login")}
+            onClick={() => {
+              logout()
+              router.replace("/auth/login")
+            }}
             className="w-full min-h-11 flex items-center gap-3 px-4 py-3 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-[#FFF4EA] transition-all"
             style={{ fontFamily: "var(--font-heading)" }}
           >

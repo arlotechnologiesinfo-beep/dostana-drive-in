@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { Heart, Minus, Plus, Star } from "lucide-react"
 import type { HomeDish } from "@/data/home-demo"
+import { isDishArt } from "@/lib/dish-art"
 import { useFavoritesStore } from "@/stores/favorites"
 
 interface DishCardProps {
@@ -20,7 +21,7 @@ export function DishCard({ dish, quantity, onAdd, onQuantity, available = true }
   return (
     <article className="relative w-[164px] shrink-0 snap-start rounded-[20px] md:w-full bg-white p-3 border border-[#F1E7DE] shadow-[0_6px_24px_rgba(48,32,25,0.06)]">
       <div className="relative h-[116px] w-full overflow-hidden rounded-2xl md:h-[170px] bg-[#FFF1E5]">
-        <Image src={dish.image} alt={dish.name} fill sizes="164px" className="object-cover" />
+        <Image src={dish.image} alt={dish.name} fill unoptimized={isDishArt(dish.image)} sizes="164px" className={isDishArt(dish.image) ? "bg-white object-contain" : "object-cover"} />
       </div>
       <button
         type="button"

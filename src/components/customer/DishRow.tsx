@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { IndianRupee, Plus, Star, UtensilsCrossed } from "lucide-react"
+import { isDishArt } from "@/lib/dish-art"
 import { QtyStepper } from "@/components/customer/QtyStepper"
 import type { AddableDish, CatalogItem } from "@/lib/catalog"
 
@@ -24,7 +25,7 @@ export function DishRow({ item, tableId, quantity, onAdd, onQuantity, showStall 
       <Link href={href} className="flex min-w-0 flex-1 items-center gap-3 md:gap-4" aria-label={`${item.name}, ₹${item.price}`}>
         <span className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#FFF1E5] md:h-24 md:w-24">
           {item.image ? (
-            <Image src={item.image} alt="" fill sizes="96px" className="object-cover" />
+            <Image src={item.image} alt="" fill unoptimized={isDishArt(item.image)} sizes="96px" className={isDishArt(item.image) ? "bg-white object-contain" : "object-cover"} />
           ) : (
             <UtensilsCrossed className="h-7 w-7 text-[#F4772B]/60" aria-hidden="true" />
           )}

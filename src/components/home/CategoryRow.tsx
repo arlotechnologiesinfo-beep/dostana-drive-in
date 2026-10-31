@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { isDishArt } from "@/lib/dish-art"
 import type { HomeCategory } from "@/data/home-demo"
 
 interface CategoryRowProps {
@@ -30,7 +31,7 @@ export function CategoryRow({ categories, selectedId, onSelect }: CategoryRowPro
                   style={{ backgroundColor: c.bg }}
                 >
                   <span className="absolute inset-1.5 overflow-hidden rounded-full shadow-[0_3px_10px_rgba(48,32,25,0.08)]">
-                    <Image src={c.image} alt="" fill sizes="64px" className="object-cover" />
+                    <Image src={c.image} alt="" fill unoptimized={isDishArt(c.image)} sizes="64px" className={c.image.endsWith(".webp") ? "bg-white object-contain p-1" : isDishArt(c.image) ? "scale-[1.35] bg-white object-cover object-[50%_38%]" : "object-cover"} />
                   </span>
                 </span>
                 <span className={`text-[13px] font-semibold leading-4 md:text-sm md:leading-5 ${selected ? "text-[#E85D16]" : "text-[#26160F]"}`}>

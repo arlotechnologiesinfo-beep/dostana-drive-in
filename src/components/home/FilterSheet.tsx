@@ -14,7 +14,7 @@ interface FilterSheetProps {
   resultCount: number
 }
 
-const CUISINE_OPTIONS = ["Biryani", "South Indian", "North Indian", "Chinese", "Pizza", "Burgers", "Desserts", "Beverages"]
+const CUISINE_OPTIONS = ["Biryani", "South Indian", "Chinese", "Pizza", "Burgers", "Desserts", "Beverages", "North Indian"]
 
 function Chip({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) {
   return (

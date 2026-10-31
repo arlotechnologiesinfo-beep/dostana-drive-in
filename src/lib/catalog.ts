@@ -1,4 +1,5 @@
 import { ALL_MENU_ITEMS } from "@/data/menu"
+import { dishArt } from "@/lib/dish-art"
 import { HOME_DISHES, HOME_STALLS, type HomeStall } from "@/data/home-demo"
 import { useMenuAdminStore, type StaffItem } from "@/stores/menu-admin"
 
@@ -104,7 +105,7 @@ const BASE: CatalogItem[] = [
       price: i.price,
       stallId: i.stall_id,
       stallName: stall.name,
-      image: i.image ?? photoFor(i.name, i.category_name, stall.image),
+      image: dishArt(i.name, i.category_name) ?? i.image ?? photoFor(i.name, i.category_name, stall.image),
       veg: i.is_veg,
       description: i.description ?? i.subtitle,
       category: i.category_name,

@@ -174,7 +174,7 @@ export default function TablePage() {
             ) : (
               <>
                 <HeroCarousel tableId={tableId} />
-                <CategoryRow categories={HOME_CATEGORIES} selectedId={categoryId} onSelect={setCategoryId} />
+                                <CategoryRow categories={HOME_CATEGORIES} selectedId={categoryId} onSelect={setCategoryId} />
                 <StallCircles stalls={HOME_STALLS} tableId={tableId} />
                 <PromoCards tableId={tableId} />
                 <MegaTreatsBanner tableId={tableId} />

@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, Heart, Star, UtensilsCrossed } from "lucide-react"
+import { isDishArt } from "@/lib/dish-art"
 import { QtyStepper } from "@/components/customer/QtyStepper"
 import { useCatalog } from "@/lib/use-catalog"
 import { useCartStore } from "@/stores/cart"
@@ -62,7 +63,7 @@ export default function DishDetailPage() {
       <div className="mx-auto w-full max-w-[430px] md:max-w-[820px] lg:grid lg:max-w-[1100px] lg:grid-cols-2 lg:gap-10 lg:pt-8">
         <div className="relative h-[300px] w-full overflow-hidden bg-[#FFF1E5] md:h-[420px] lg:h-[560px] lg:rounded-[32px]">
           {item.image ? (
-            <Image src={item.image} alt={item.name} fill priority sizes="(max-width: 1100px) 100vw, 550px" className="object-cover" />
+            <Image src={item.image} alt={item.name} fill priority unoptimized={isDishArt(item.image)} sizes="(max-width: 1100px) 100vw, 550px" className={isDishArt(item.image) ? "bg-white object-contain" : "object-cover"} />
           ) : (
             <span className="flex h-full items-center justify-center">
               <UtensilsCrossed className="h-14 w-14 text-[#F4772B]/50" aria-hidden="true" />
